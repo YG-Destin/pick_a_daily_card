@@ -300,35 +300,6 @@ planets: ["☉", "☽",  "☿", "♀", "♂", "♃", "♄", "♅", "♆", "♇",
   while (picked.length < site.count) {
     let choice = site.items[Math.floor(Math.random() * site.items.length)];
     if (!picked.includes(choice)) picked.push(choice);
-    .guaItem {
-      border: 1px solid #ccc;
-      border-radius: 5px;
-      padding: 10px;
-      background: #f9f9f9;
-      min-width: 120px;
-      text-align: center;
-    }
-    .guaTitle {
-      font-weight: bold;
-      margin-bottom: 10px;
-      background: #d0e8ff;
-      padding: 0px;
-      border-radius: 0px;
-    }
-    .symbols {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      font-size: 50px;
-      line-height: 15px;
-      user-select: none;
-    }
-  .symbols div {
-  font-size: 125px;    /* 글자 크기 키움 */
-  line-height: 10px;  /* 줄 높이도 늘림 */
-  width: 250px;        /* 가로 길이 고정 */
-  margin: 0 auto;     /* 가운데 정렬 */
-}
   }
   return picked.map(hex => `
     <div style="margin:10px; padding:8px; border:1px solid #ccc; border-radius:6px; display:inline-block; text-align:center;">
@@ -395,5 +366,6 @@ function redraw(deckId, siteId) {
   </script>
 </body>
 </html>
+
 
 
