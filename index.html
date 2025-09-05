@@ -322,7 +322,9 @@ planets: ["☉", "☽",  "☿", "♀", "♂", "♃", "♄", "♅", "♆", "♇",
       let n = String(num).padStart(2,"0")+"."+ext;
       if (!picked.includes(n)) picked.push(n);
     }
-    return picked.map(f => `<img src="${site.folder}/${f}" alt="Card">`).join("");
+    return picked.map(f => 
+  `<img src="${site.folder}/${f}" alt="Card">`
+).join("");
   }
 }
 
@@ -366,6 +368,7 @@ function redraw(deckId, siteId) {
   </script>
 </body>
 </html>
+
 
 
 
