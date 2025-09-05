@@ -28,35 +28,6 @@
   grid-template-columns: repeat(3, 1fr); /* 3장씩 한 줄 */
   gap: 10px;
 }
-     .guaItem {
-      border: 1px solid #ccc;
-      border-radius: 5px;
-      padding: 10px;
-      background: #f9f9f9;
-      min-width: 120px;
-      text-align: center;
-    }
-    .guaTitle {
-      font-weight: bold;
-      margin-bottom: 10px;
-      background: #d0e8ff;
-      padding: 0px;
-      border-radius: 0px;
-    }
-    .symbols {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      font-size: 50px;
-      line-height: 15px;
-      user-select: none;
-    }
-  .symbols div {
-  font-size: 125px;    /* 글자 크기 키움 */
-  line-height: 10px;  /* 줄 높이도 늘림 */
-  width: 250px;        /* 가로 길이 고정 */
-  margin: 0 auto;     /* 가운데 정렬 */
-}
     .input-row {
       margin: 15px 0;
       display: flex;
@@ -115,23 +86,23 @@
 
   <script>
     const sites = [
-      { id: "JiNi_Kipper",    name: "JiNi Kipper",    folder: "JiNi_Kipper/cards",    total: 36, count: 3, exts: ["jpg"] },
-      { id: "drink_oracle",   name: "Cafe oracle",       folder: "drink_oracle/cards",       total: 32, count: 3, exts: ["jpg"] },
-      { id: "Oracle_JiNi", name: "Oracle JiNi",           folder: "Oracle_JiNi/cards",           total: 53, count: 3, exts: ["PNG"] },
-      { id: "JiNi_Belline",      name: "JiNi Belline", folder: "JiNi_Belline/cards",                total: 53, count: 3, exts: ["JPG"] },
-      { id: "JiNi_Tarot",       name: "JiNi Tarot",          folder: "JiNi_Tarot/cards",                 total: 78, count: 6, exts: ["jpeg"] },
-      { id: "ori_kip",   name: "Original Kipper",     folder: "ori_kip/cards",             total: 36, count: 3, exts: ["png"] },
-      { id: "Raming_E_F_G_O",     name: "Eastern Four Guardians Oracle",         folder: "Raming_E_F_G_O/cards",               total: 36, count: 3, exts: ["jpg"] },
-      { id: "Sibylle_des_Salons",  name: "Sibylle des Salons",            folder: "Sibylle_des_Salons/cards",            total: 52, count: 3, exts: ["jpg"] },
-      { id: "horos_bell",       name: "Horoscope Belline",        folder: "horos_bell/cards",                 total: 53, count: 3, exts: ["png"] },
-      { id: "Book_of_Destiny",    name: "Book of Destiny", folder: "Book_of_Destiny/cards",            total: 33, count: 3, exts: ["JPG"] },
-      { id: "Coffee_Card",       name: "Coffee Card",      folder: "Coffee_Card/cards",                 total: 32, count: 3, exts: ["jpg"] },
-      { id: "rmtt",      name: "Romantic Tarot",     folder: "rmtt/cards",                total: 78, count: 6, exts: ["png"] },
-      { id: "GAT",      name: "Guardian Angel Tarot",         folder: "GAT/cards",                total: 78, count: 3, exts: ["png"] },
-      { id: "blt",       name: "Borderless Tarot",         folder: "blt/cards",                 total: 78, count: 6, exts: ["png"] },
-      { id: "rm_ag",     name: "Romance Angel",    folder: "rm_ag/cards",               total: 44, count: 1, exts: ["png"] },
+      { id: "JiNi_Kipper",    name: "JiNi Kipper",    folder: "cards",    total: 36, count: 3, exts: ["jpg"] },
+      { id: "drink_oracle",   name: "Cafe oracle",       folder: "cards",       total: 32, count: 3, exts: ["jpg"] },
+      { id: "Oracle_JiNi", name: "Oracle JiNi",           folder: "cards",           total: 53, count: 3, exts: ["PNG"] },
+      { id: "JiNi_Belline",      name: "JiNi Belline", folder: "cards",                total: 53, count: 3, exts: ["JPG"] },
+      { id: "JiNi_Tarot",       name: "JiNi Tarot",          folder: "cards",                 total: 78, count: 6, exts: ["jpeg"] },
+      { id: "ori_kip",   name: "Original Kipper",     folder: "cards",             total: 36, count: 3, exts: ["png"] },
+      { id: "Raming_E_F_G_O",     name: "Eastern Four Guardians Oracle",         folder: "cards",               total: 36, count: 3, exts: ["jpg"] },
+      { id: "Sibylle_des_Salons",  name: "Sibylle des Salons",            folder: "cards",            total: 52, count: 3, exts: ["jpg"] },
+      { id: "horos_bell",       name: "Horoscope Belline",        folder: "cards",                 total: 53, count: 3, exts: ["png"] },
+      { id: "Book_of_Destiny",    name: "Book of Destiny", folder: "cards",            total: 33, count: 3, exts: ["JPG"] },
+      { id: "Coffee_Card",       name: "Coffee Card",      folder: "cards",                 total: 32, count: 3, exts: ["jpg"] },
+      { id: "rmtt",      name: "Romantic Tarot",     folder: "cards",                total: 78, count: 6, exts: ["png"] },
+      { id: "GAT",      name: "Guardian Angel Tarot",         folder: "cards",                total: 78, count: 3, exts: ["png"] },
+      { id: "blt",       name: "Borderless Tarot",         folder: "cards",                 total: 78, count: 6, exts: ["png"] },
+      { id: "rm_ag",     name: "Romance Angel",    folder: "cards",               total: 44, count: 1, exts: ["png"] },
 
-  { id: "Lismon_G_E", name: "Lismon Grand Etteilla", folder: "Lismon_G_E/cards", total: 78, count: 3, exts: ["jpg"], mode: "reversible" },
+  { id: "Lismon_G_E", name: "Lismon Grand Etteilla", folder: "cards", total: 78, count: 3, exts: ["jpg"], mode: "reversible" },
 
   { id: "Astrology_card", name: "Astrology card", mode: "astro", groups: {
 planets: ["☉", "☽",  "☿", "♀", "♂", "♃", "♄", "♅", "♆", "♇","☊", "☋"],
@@ -329,6 +300,35 @@ planets: ["☉", "☽",  "☿", "♀", "♂", "♃", "♄", "♅", "♆", "♇",
   while (picked.length < site.count) {
     let choice = site.items[Math.floor(Math.random() * site.items.length)];
     if (!picked.includes(choice)) picked.push(choice);
+    .guaItem {
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      padding: 10px;
+      background: #f9f9f9;
+      min-width: 120px;
+      text-align: center;
+    }
+    .guaTitle {
+      font-weight: bold;
+      margin-bottom: 10px;
+      background: #d0e8ff;
+      padding: 0px;
+      border-radius: 0px;
+    }
+    .symbols {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      font-size: 50px;
+      line-height: 15px;
+      user-select: none;
+    }
+  .symbols div {
+  font-size: 125px;    /* 글자 크기 키움 */
+  line-height: 10px;  /* 줄 높이도 늘림 */
+  width: 250px;        /* 가로 길이 고정 */
+  margin: 0 auto;     /* 가운데 정렬 */
+}
   }
   return picked.map(hex => `
     <div style="margin:10px; padding:8px; border:1px solid #ccc; border-radius:6px; display:inline-block; text-align:center;">
@@ -395,4 +395,5 @@ function redraw(deckId, siteId) {
   </script>
 </body>
 </html>
+
 
