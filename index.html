@@ -42,10 +42,10 @@
 
     /* 6장 타로일 때 그리드로 배치 */
     .cards.six-tarot {
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;  /* 화면 좁으면 자동 줄바꿈 */
-  gap: 3px;         /* 카드 사이 간격 */
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  justify-items: center;
 }
 
     /* 모바일 대응 */
@@ -422,4 +422,5 @@ function redraw(deckId, siteId) {
   </script>
 </body>
 </html>
+
 
