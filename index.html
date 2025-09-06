@@ -42,11 +42,12 @@
     }
 
     /* 6장 타로일 때 그리드로 배치 */
-    .cards.six-tarot {
+ .cards.six-tarot {
   display: grid;
   grid-template-columns: repeat(3, 1fr); /* 항상 3장씩 */
   justify-items: center; /* 가운데 정렬 */
   gap: 3px; /* 카드 간격 */
+  min-height: 360px; /* 타로 6장용 */
 }
       .cards img {
         width: 95px;
@@ -437,6 +438,7 @@ function redraw(deckId, siteId) {
   </script>
 </body>
 </html>
+
 
 
 
