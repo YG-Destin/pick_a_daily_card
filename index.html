@@ -51,22 +51,20 @@
   border: 1px solid #ccc;
   border-radius: 6px;
 }
-/* 그랑 에띨라 전용 스타일 */
+/* 그랑 에띨라 전용 카드 */
 .cards.Lismon_G_E img {
   width: 110px;
   height: 165px;
-  object-fit: cover;   /* 여백 없이 꽉 채우기 */
+  object-fit: cover;
   background: white;
   border: 1px solid #ccc;
-}
-    /* 그랑 에띨라 전용: 위치 고정 */
-.cards.Lismon_G_E {
-  min-height: 180px;   /* 카드 한 줄 높이 고정 */
-  display: flex;
-  justify-content: center;
-  gap: 8px;
+  display: block;          /* inline-block 높이 차이 방지 */
 }
 
+/* 회전은 이미지를 감싼 div가 아니라 img에 직접 적용 */
+.cards.Lismon_G_E .rotated {
+  transform: rotate(180deg);
+}
 
 /* 6장 타로 전용 */
 .cards.six-tarot {
@@ -329,9 +327,10 @@ planets: ["☉", "☽",  "☿", "♀", "♂", "♃", "♄", "♅", "♆", "♇",
       picked.push({ file: n, reversed });
     }
     return picked.map(card => `
-      <div style="display:inline-block; transform:${card.reversed ? 'rotate(180deg)' : 'none'};">
-        <img src="${site.folder}/${card.file}" alt="Card">
-      </div>`).join("");
+  <img src="${site.folder}/${card.file}" 
+       alt="Card" 
+       class="${card.reversed ? 'rotated' : ''}">
+`).join("");
   }
 
   // 2) 점성술 카드 (행성 + 별자리 + 하우스)
@@ -476,6 +475,7 @@ function redraw(deckId, siteId) {
   </script>
 </body>
 </html>
+
 
 
 
