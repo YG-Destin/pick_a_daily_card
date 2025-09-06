@@ -479,10 +479,6 @@ else if (site.mode === "rune") {
   return output;
 }
      
-function toggleMeaning(id) {
-  const el = document.getElementById(id);
-  el.style.display = (el.style.display === "none") ? "block" : "none";
-}
 
   // 4) 오방색 (사각형 색상칸)
   else if (site.mode === "obang") {
@@ -581,10 +577,16 @@ function redraw(deckId, siteId) {
   const block = document.querySelector(`#${deckId} .cards`);
   block.innerHTML = drawCards(site);
 }
+    
+    function toggleMeaning(id) {
+  const el = document.getElementById(id);
+  el.style.display = (el.style.display === "none") ? "block" : "none";
+}
 
   </script>
 </body>
 </html>
+
 
 
 
