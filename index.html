@@ -445,45 +445,44 @@
   return output;
 }
     
-  // 3) 룬 (정방향/역방향)
-  else if (site.mode === "rune") {
+ // 3) 룬 (정방향/역방향)
+else if (site.mode === "rune") {
   let picked = [];
   while (picked.length < site.count) {
     let choice = site.items[Math.floor(Math.random() * site.items.length)];
     if (!picked.includes(choice)) picked.push(choice);
   }
 
-  // 카드 영역 (3개 균등 정렬)
   let output = `<div class="three-grid">`;
 
-picked.forEach((rune, index) => {
-  let reversed = Math.random() < 0.5;
-  let meaning = reversed ? rune[2] : rune[1];
-  let runeId = `rune-meaning-${index}`;
+  picked.forEach((rune, index) => {
+    let reversed = Math.random() < 0.5;
+    let meaning = reversed ? rune[2] : rune[1];
+    let runeId = `rune-meaning-${index}`;
 
-  output += `
-    <div style="width:100px; border:1px solid #ccc; border-radius:6px; 
-                display:flex; flex-direction:column; align-items:center; 
-                justify-content:center; padding:5px; cursor:pointer;"
-         onclick="toggleMeaning('${runeId}')">
-      <div style="font-size:2.2em; ${reversed ? 'transform: rotate(180deg);' : ''}">
-        ${rune[0]}
+    output += `
+      <div style="width:100px; border:1px solid #ccc; border-radius:6px; 
+                  display:flex; flex-direction:column; align-items:center; 
+                  justify-content:center; padding:5px; cursor:pointer;"
+           onclick="toggleMeaning('${runeId}')">
+        <div style="font-size:2.2em; ${reversed ? 'transform: rotate(180deg);' : ''}">
+          ${rune[0]}
+        </div>
+        <div id="${runeId}" style="display:none; margin-top:5px; font-size:0.9em; text-align:center;">
+          ${meaning}
+        </div>
       </div>
-      <div id="${runeId}" style="display:none; margin-top:5px; font-size:0.9em; text-align:center;">
-        ${meaning}
-      </div>
-    </div>
-  `;
-});
+    `;
+  });
 
-output += `</div>`; // three-grid 닫기
-    function toggleMeaning(id) {
+  output += `</div>`;
+  return output;
+}
+
+// ✅ drawCards 끝난 바깥에 두기
+function toggleMeaning(id) {
   const el = document.getElementById(id);
-  if (el.style.display === "none") {
-    el.style.display = "block";
-  } else {
-    el.style.display = "none";
-  }
+  el.style.display = (el.style.display === "none") ? "block" : "none";
 }
 
   // 4) 오방색 (사각형 색상칸)
@@ -587,6 +586,7 @@ function redraw(deckId, siteId) {
   </script>
 </body>
 </html>
+
 
 
 
