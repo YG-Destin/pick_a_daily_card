@@ -36,7 +36,13 @@
   justify-items: center;
   padding: 0 3px;
 }
-
+/* 그랑 에띨라 전용: 항상 3장 가로 */
+.cards.Lismon_G_E {
+  display: grid !important;
+  grid-template-columns: repeat(3, auto);
+  justify-content: center;
+  gap: 8px;
+}
 /* 1~2장짜리 덱 전용 */
 .cards.few-cards {
   display: flex;
@@ -218,23 +224,23 @@
 
   <script>
     const sites = [
-      { id: "JiNi_Kipper",    name: "JiNi Kipper",    folder: "https://yg-destin.github.io/JiNi_Kipper/cards",    total: 36, count: 3, exts: ["jpg"] },
-      { id: "drink_oracle",   name: "Cafe Oracle",       folder: "https://yg-destin.github.io/drink_oracle/cards",       total: 32, count: 3, exts: ["jpg"] },
-      { id: "Oracle_JiNi", name: "Oracle JiNi",           folder: "https://yg-destin.github.io/Oracle_JiNi/cards",           total: 53, count: 3, exts: ["PNG"] },
-      { id: "JiNi_Belline",      name: "JiNi Belline", folder: "https://yg-destin.github.io/JiNi_Belline/cards",                total: 53, count: 3, exts: ["JPG"] },
-      { id: "JiNi_Tarot",       name: "JiNi Tarot",          folder: "https://yg-destin.github.io/JiNi_Tarot/cards",                 total: 78, count: 6, exts: ["jpeg"] },
-      { id: "ori_kip",   name: "Original Kipper",     folder: "https://yg-destin.github.io/ori_kip/cards",             total: 36, count: 3, exts: ["png"] },
-      { id: "Raming_E_F_G_O",     name: "Eastern Four Guardians",         folder: "https://yg-destin.github.io/Raming_E_F_G_O/cards",               total: 36, count: 3, exts: ["jpg"] },
-      { id: "Sibylle_des_Salons",  name: "Sibylle des Salons",            folder: "https://yg-destin.github.io/Sibylle_des_Salons/cards",            total: 52, count: 3, exts: ["jpg"] },
-      { id: "horos_bell",       name: "Horoscope Belline",        folder: "https://yg-destin.github.io/horos_bell/cards",                 total: 53, count: 3, exts: ["png"] },
-      { id: "Book_of_Destiny",    name: "Book of Destiny", folder: "https://yg-destin.github.io/Book_of_Destiny/cards",            total: 33, count: 3, exts: ["JPG"] },
-      { id: "Coffee_Card",       name: "Coffee Card",      folder: "https://yg-destin.github.io/Coffee_Card/cards",                 total: 32, count: 3, exts: ["jpg"] },
-      { id: "rmtt",      name: "Romantic Tarot",     folder: "https://yg-destin.github.io/rmtt/cards",                total: 78, count: 6, exts: ["png"] },
-      { id: "GAT",      name: "Guardian Angel Tarot",         folder: "https://yg-destin.github.io/GAT/cards",                total: 78, count: 1, exts: ["png"] },
-      { id: "blt",       name: "Borderless Tarot",         folder: "https://yg-destin.github.io/blt/cards",                 total: 78, count: 6, exts: ["png"] },
-      { id: "rm_ag",     name: "Romance Angel",    folder: "https://yg-destin.github.io/rm_ag/cards",               total: 44, count: 1, exts: ["png"] },
+  { id: "JiNi_Kipper", name: "JiNi Kipper", folder: "https://yg-destin.github.io/JiNi_Kipper/cards", total: 36, startFrom: 1, count: 3, exts: ["jpg"] },
+  { id: "drink_oracle", name: "Cafe Oracle", folder: "https://yg-destin.github.io/drink_oracle/cards", total: 32, startFrom: 1, count: 3, exts: ["jpg"] },
+  { id: "Oracle_JiNi", name: "Oracle JiNi", folder: "https://yg-destin.github.io/Oracle_JiNi/cards", total: 53, startFrom: 0, count: 3, exts: ["PNG"] },
+  { id: "JiNi_Belline", name: "JiNi Belline", folder: "https://yg-destin.github.io/JiNi_Belline/cards", total: 53, startFrom: 0, count: 3, exts: ["JPG"] },
+  { id: "JiNi_Tarot", name: "JiNi Tarot", folder: "https://yg-destin.github.io/JiNi_Tarot/cards", total: 78, startFrom: 0, count: 6, exts: ["jpeg"] },
+  { id: "ori_kip", name: "Original Kipper", folder: "https://yg-destin.github.io/ori_kip/cards", total: 36, startFrom: 1, count: 3, exts: ["png"] },
+  { id: "Raming_E_F_G_O", name: "Eastern Four Guardians", folder: "https://yg-destin.github.io/Raming_E_F_G_O/cards", total: 36, startFrom: 1, count: 3, exts: ["jpg"] },
+  { id: "Sibylle_des_Salons", name: "Sibylle des Salons", folder: "https://yg-destin.github.io/Sibylle_des_Salons/cards", total: 52, startFrom: 1, count: 3, exts: ["jpg"] },
+  { id: "horos_bell", name: "Horoscope Belline", folder: "https://yg-destin.github.io/horos_bell/cards", total: 53, startFrom: 1, count: 3, exts: ["png"] },
+  { id: "Book_of_Destiny", name: "Book of Destiny", folder: "https://yg-destin.github.io/Book_of_Destiny/cards", total: 33, startFrom: 1, count: 3, exts: ["JPG"] },
+  { id: "Coffee_Card", name: "Coffee Card", folder: "https://yg-destin.github.io/Coffee_Card/cards", total: 32, startFrom: 1, count: 3, exts: ["jpg"] },
+  { id: "rmtt", name: "Romantic Tarot", folder: "https://yg-destin.github.io/rmtt/cards", total: 78, startFrom: 0, count: 6, exts: ["png"] },
+  { id: "GAT", name: "Guardian Angel Tarot", folder: "https://yg-destin.github.io/GAT/cards", total: 78, startFrom: 0, count: 1, exts: ["png"] },
+  { id: "blt", name: "Borderless Tarot", folder: "https://yg-destin.github.io/blt/cards", total: 78, startFrom: 0, count: 6, exts: ["png"] },
+  { id: "rm_ag", name: "Romance Angel", folder: "https://yg-destin.github.io/rm_ag/cards", total: 44, startFrom: 1, count: 1, exts: ["png"] },
 
-  { id: "Lismon_G_E", name: "Lismon Grand Etteilla", folder: "https://yg-destin.github.io/Lismon_G_E/cards", total: 78, count: 3, exts: ["jpg"], mode: "reversible" },
+  { id: "Lismon_G_E", name: "Lismon Grand Etteilla", folder: "https://yg-destin.github.io/Lismon_G_E/cards", total: 78, startFrom: 0, count: 3, exts: ["jpg"], mode: "reversible" },
 
   { id: "Astrology_card", name: "Astrology card", mode: "astro", groups: {
    houses: [
@@ -479,7 +485,6 @@ else if (site.mode === "rune") {
   return output;
 }
      
-
   // 4) 오방색 (사각형 색상칸)
   else if (site.mode === "obang") {
     let picked = [];
@@ -522,14 +527,13 @@ else if (site.mode === "iching") {
   `).join("");
 }
 
-
 // 6) 기본 이미지 카드 (타로/오라클/카르토망시 등)
 else {
   let picked = [];
   while (picked.length < site.count) {
-    let num = Math.floor(Math.random() * site.total); // 0 ~ total-1
+    let num = Math.floor(Math.random() * site.total) + (site.startFrom ?? 0);
     let ext = site.exts[Math.floor(Math.random() * site.exts.length)];
-    let n = String(num).padStart(2,"0")+"."+ext;
+    let n = String(num).padStart(2, "0") + "." + ext;
     if (!picked.includes(n)) picked.push(n);
   }
 
@@ -555,7 +559,7 @@ else {
 }
 
     // 확인 버튼 눌렀을 때
-    function showSelected() {
+      function showSelected() {
       const checked = document.querySelectorAll('input[type="checkbox"]:checked');
       const results = document.getElementById("results");
       results.innerHTML = "";
@@ -586,7 +590,7 @@ checked.forEach(item => {
     }
 
     // 특정 덱 다시 뽑기
-function redraw(deckId, siteId) {
+  function redraw(deckId, siteId) {
   const site = sites.find(s => s.id === siteId);
   const block = document.querySelector(`#${deckId} .cards`);
   block.innerHTML = drawCards(site);
@@ -600,4 +604,5 @@ function redraw(deckId, siteId) {
   </script>
 </body>
 </html>
+
 
