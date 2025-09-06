@@ -523,7 +523,7 @@ else if (site.mode === "iching") {
 }
 
 
-  // 6) 기본 이미지 카드 (타로/오라클/카르토망시 등)
+// 6) 기본 이미지 카드 (타로/오라클/카르토망시 등)
 else {
   let picked = [];
   while (picked.length < site.count) {
@@ -551,7 +551,7 @@ else {
   return picked.map(f => 
     `<img src="${site.folder}/${f}" alt="Card">`
   ).join("");
-}
+} // ← 이거 하나만! drawCards의 else 닫기
 
 
     // 확인 버튼 눌렀을 때
@@ -601,6 +601,7 @@ function redraw(deckId, siteId) {
   </script>
 </body>
 </html>
+
 
 
 
