@@ -524,18 +524,33 @@ else if (site.mode === "iching") {
 
 
   // 6) 기본 이미지 카드 (타로/오라클/카르토망시 등)
-  else {
-    let picked = [];
-    while (picked.length < site.count) {
-  let num = Math.floor(Math.random() * site.total); // 0 ~ total-1
-  let ext = site.exts[Math.floor(Math.random() * site.exts.length)];
-  let n = String(num).padStart(2,"0")+"."+ext;
-  if (!picked.includes(n)) picked.push(n);
-}
-    return picked.map(f => 
-  `<img src="${site.folder}/${f}" alt="Card">`
-).join("");
+else {
+  let picked = [];
+  while (picked.length < site.count) {
+    let num = Math.floor(Math.random() * site.total); // 0 ~ total-1
+    let ext = site.exts[Math.floor(Math.random() * site.exts.length)];
+    let n = String(num).padStart(2,"0")+"."+ext;
+    if (!picked.includes(n)) picked.push(n);
   }
+
+  // ✅ 3장짜리 → 3열 그리드
+  if (site.count === 3) {
+    return `<div class="three-grid">` + 
+      picked.map(f => `<img src="${site.folder}/${f}" alt="Card">`).join("") +
+    `</div>`;
+  }
+
+  // ✅ 1~2장짜리 → 중앙 정렬
+  if (site.count <= 2) {
+    return `<div class="cards few-cards">` +
+      picked.map(f => `<img src="${site.folder}/${f}" alt="Card">`).join("") +
+    `</div>`;
+  }
+
+  // ✅ 그 외(6장 등) → 기존 방식
+  return picked.map(f => 
+    `<img src="${site.folder}/${f}" alt="Card">`
+  ).join("");
 }
 
 
@@ -586,6 +601,7 @@ function redraw(deckId, siteId) {
   </script>
 </body>
 </html>
+
 
 
 
