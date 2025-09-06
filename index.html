@@ -108,6 +108,13 @@
   line-height: 0.6; /* 세로 간격 줄임 */
   margin-top: 0px; /* 위쪽 여백 축소 */
 }
+    .rune-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* 항상 3개 */
+  gap: 10px;
+  justify-items: center;
+  margin-top: 10px;
+}
     /* 모바일 화면에서 버튼 크기 조정 */
     @media (max-width: 480px) {
       button {
@@ -303,19 +310,33 @@ planets: ["☉", "☽",  "☿", "♀", "♂", "♃", "♄", "♅", "♆", "♇",
 
   // 3) 룬 (정방향/역방향)
   else if (site.mode === "rune") {
-    let picked = [];
-    while (picked.length < site.count) {
-      let choice = site.items[Math.floor(Math.random() * site.items.length)];
-      if (!picked.includes(choice)) picked.push(choice);
-    }
-    return picked.map(rune => {
-      let reversed = Math.random() < 0.5;
-      return `<div style="margin:10px; padding:8px; border:1px solid #ccc; border-radius:6px; display:inline-block;">
-        <b style="font-size:1.5em;">${rune[0]}</b><br>
-        ${reversed ? rune[2] : rune[1]}
-      </div>`;
-    }).join("");
+  let picked = [];
+  while (picked.length < site.count) {
+    let choice = site.items[Math.floor(Math.random() * site.items.length)];
+    if (!picked.includes(choice)) picked.push(choice);
   }
+
+  // 카드 영역 (3개 균등 정렬)
+  let output = "<div class='rune-row'>";
+  let meanings = "<div style='margin-top:10px; text-align:left;'><b>룬 해석:</b><br>";
+
+  picked.forEach((rune) => {
+    let reversed = Math.random() < 0.5;
+    let meaning = reversed ? rune[2] : rune[1];
+    output += `
+      <div style="width:80px; height:80px; border:1px solid #ccc; border-radius:6px; 
+                  display:flex; align-items:center; justify-content:center; 
+                  font-size:2.2em; ${reversed ? 'transform: rotate(180deg);' : ''}">
+        ${rune[0]}
+      </div>
+    `;
+    meanings += `${rune[0]} → ${meaning}<br>`;
+  });
+
+  output += "</div>";
+  meanings += "</div>";
+  return output + meanings;
+}
 
   // 4) 오방색 (사각형 색상칸)
   else if (site.mode === "obang") {
@@ -416,6 +437,7 @@ function redraw(deckId, siteId) {
   </script>
 </body>
 </html>
+
 
 
 
