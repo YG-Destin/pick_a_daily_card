@@ -19,15 +19,29 @@
       margin-top: 20px;
       font-size: 1.4rem;
     }
-/* 카드 영역 기본 */
+/* 기본: 여러 장일 때 */
 .cards {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr); /* 항상 3장씩 한 줄 */
-  gap: 3px;              /* 카드 간 여백 최소 */
-  justify-items: center; /* 카드 가운데 정렬 */
-  padding: 0 3px;        /* 화면 좌우에도 살짝 여백 */
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 8px;
   margin-top: 10px;
-  max-width: 100%;
+}
+
+/* 6장 타로 전용 → 3x2 그리드 */
+.cards.six-tarot {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 3px;
+  justify-items: center;
+  padding: 0 3px;
+}
+
+/* 1~2장짜리 덱 전용 */
+.cards.few-cards {
+  display: flex;
+  justify-content: center; /* 가로 중앙 */
+  align-items: center;     /* 세로 중앙 */
 }
 
 /* 카드 이미지 기본값 (모든 덱 공통) */
@@ -75,7 +89,35 @@
 .cards:not(.six-tarot) {
   min-height: 180px;
 }
+    
+ /* 공통 3열 레이아웃 */
+.three-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  justify-items: center;
+  margin-top: 10px;
+}
 
+/* 점성술 카드 전용 */
+.astro-card {
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  padding: 10px;
+  font-size: 1.5em;
+  text-align: center;
+  background: #fff;
+}   
+    
+    .rune-card {
+  display: inline-block;
+  margin: 10px;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  text-align: center; /* 중앙 정렬 */
+}
+    
 /* 모바일 대응 (세로 화면에서 카드가 너무 작아지지 않게) */
 @media (max-width: 768px) {
   .cards {
@@ -195,9 +237,48 @@
   { id: "Lismon_G_E", name: "Lismon Grand Etteilla", folder: "https://yg-destin.github.io/Lismon_G_E/cards", total: 78, count: 3, exts: ["jpg"], mode: "reversible" },
 
   { id: "Astrology_card", name: "Astrology card", mode: "astro", groups: {
-planets: ["☉", "☽",  "☿", "♀", "♂", "♃", "♄", "♅", "♆", "♇","☊", "☋"],
-      signs: ["♈", "♉", "♊", "♋", "♌", "♍", "♎", "♏", "♐", "♑", "♒", "♓"],
-      houses: ["①", "②", "③", "④", "⑤", "⑥", "⑦", "⑧", "⑨", "⑩", "⑪", "⑫"]
+   houses: [
+  ["①", "자아, 외모, 태도"],
+  ["②", "자원, 재정, 가치"],
+  ["③", "학습, 형제, 소통"],
+  ["④", "가정, 뿌리, 내면"],
+  ["⑤", "창의, 연애, 자녀"],
+  ["⑥", "일상, 건강, 봉사"],
+  ["⑦", "파트너, 관계, 계약"],
+  ["⑧", "변화, 성, 공유자원"],
+  ["⑨", "철학, 여행, 진리"],
+  ["⑩", "사회적 지위, 직업"],
+  ["⑪", "친구, 네트워크, 희망"],
+  ["⑫", "무의식, 은둔, 영성"]
+]
+    signs: [
+  ["♈", "시작, 용기, 추진력"],
+  ["♉", "안정, 물질, 감각"],
+  ["♊", "지식, 소통, 교류"],
+  ["♋", "가정, 감정, 보호"],
+  ["♌", "창의, 자존심, 표현"],
+  ["♍", "분석, 정리, 봉사"],
+  ["♎", "균형, 관계, 조화"],
+  ["♏", "열정, 깊이, 변형"],
+  ["♐", "탐험, 진리, 철학"],
+  ["♑", "목표, 규율, 성취"],
+  ["♒", "혁신, 집단, 자유"],
+  ["♓", "영감, 희생, 무의식"]
+]
+    planets: [
+  ["☉", "자아, 생명력, 의식"],
+  ["☽", "감정, 습관, 본능"],
+  ["☿", "사고, 소통, 학습"],
+  ["♀", "사랑, 미, 가치"],
+  ["♂", "행동, 에너지, 욕망"],
+  ["♃", "성장, 확장, 행운"],
+  ["♄", "책임, 한계, 구조"],
+  ["♅", "혁신, 변화, 독립"],
+  ["♆", "꿈, 영감, 무의식"],
+  ["♇", "권력, 변형, 심연"],
+  ["☊", "운명적 과제, 성장"],
+  ["☋", "익숙한 과거, 습관"]
+],
     }
   },
 
@@ -332,18 +413,38 @@ planets: ["☉", "☽",  "☿", "♀", "♂", "♃", "♄", "♅", "♆", "♇",
        class="${card.reversed ? 'rotated' : ''}">
 `).join("");
   }
-
-  // 2) 점성술 카드 (행성 + 별자리 + 하우스)
+ 
+    // 2) 점성술 카드 (하우스 + 별자리 + 행성)
   else if (site.mode === "astro") {
-    let planet = site.groups.planets[Math.floor(Math.random()*site.groups.planets.length)];
-    let sign   = site.groups.signs[Math.floor(Math.random()*site.groups.signs.length)];
-    let house  = site.groups.houses[Math.floor(Math.random()*site.groups.houses.length)];
-    return `
-      <div style="margin:10px; display:inline-block; padding:8px; border:1px solid #ccc; border-radius:6px;">
-        ${planet} / ${sign} / ${house}
-      </div>`;
-  }
+  let house  = site.groups.houses[Math.floor(Math.random() * site.groups.houses.length)];
+  let sign   = site.groups.signs[Math.floor(Math.random() * site.groups.signs.length)];
+  let planet = site.groups.planets[Math.floor(Math.random() * site.groups.planets.length)];
+  
+    
+  let items = [house, sign, planet];
+  let output = `<div class="three-grid">`;
 
+  items.forEach((item, index) => {
+    let symbol = item[0];
+    let meaning = item[1];
+    let astroId = `astro-meaning-${index}-${Date.now()}`; // 고유 ID
+
+    output += `      <div style="width:100px; border:1px solid #ccc; border-radius:6px;
+                  display:flex; flex-direction:column; align-items:center;
+                  justify-content:center; padding:5px; margin:5px; cursor:pointer;"
+           onclick="toggleMeaning('${astroId}')">
+        <div style="font-size:2em;">${symbol}</div>
+        <div id="${astroId}" style="display:none; margin-top:5px; font-size:0.9em; text-align:center;">
+          ${meaning}
+        </div>
+      </div>
+    `;
+  });
+
+  output += `</div>`;
+  return output;
+}
+    
   // 3) 룬 (정방향/역방향)
   else if (site.mode === "rune") {
   let picked = [];
@@ -353,25 +454,36 @@ planets: ["☉", "☽",  "☿", "♀", "♂", "♃", "♄", "♅", "♆", "♇",
   }
 
   // 카드 영역 (3개 균등 정렬)
-  let output = "<div class='rune-row'>";
-  let meanings = "<div style='margin-top:10px; text-align:left;'><b>룬 해석:</b><br>";
+  let output = `<div class="three-grid">`;
 
-  picked.forEach((rune) => {
-    let reversed = Math.random() < 0.5;
-    let meaning = reversed ? rune[2] : rune[1];
-    output += `
-      <div style="width:80px; height:80px; border:1px solid #ccc; border-radius:6px; 
-                  display:flex; align-items:center; justify-content:center; 
-                  font-size:2.2em; ${reversed ? 'transform: rotate(180deg);' : ''}">
+picked.forEach((rune, index) => {
+  let reversed = Math.random() < 0.5;
+  let meaning = reversed ? rune[2] : rune[1];
+  let runeId = `rune-meaning-${index}`;
+
+  output += `
+    <div style="width:100px; border:1px solid #ccc; border-radius:6px; 
+                display:flex; flex-direction:column; align-items:center; 
+                justify-content:center; padding:5px; cursor:pointer;"
+         onclick="toggleMeaning('${runeId}')">
+      <div style="font-size:2.2em; ${reversed ? 'transform: rotate(180deg);' : ''}">
         ${rune[0]}
       </div>
-    `;
-    meanings += `${rune[0]} → ${meaning}<br>`;
-  });
+      <div id="${runeId}" style="display:none; margin-top:5px; font-size:0.9em; text-align:center;">
+        ${meaning}
+      </div>
+    </div>
+  `;
+});
 
-  output += "</div>";
-  meanings += "</div>";
-  return output + meanings;
+output += `</div>`; // three-grid 닫기
+    function toggleMeaning(id) {
+  const el = document.getElementById(id);
+  if (el.style.display === "none") {
+    el.style.display = "block";
+  } else {
+    el.style.display = "none";
+  }
 }
 
   // 4) 오방색 (사각형 색상칸)
@@ -475,6 +587,7 @@ function redraw(deckId, siteId) {
   </script>
 </body>
 </html>
+
 
 
 
