@@ -446,7 +446,9 @@ checked.forEach(item => {
     results.innerHTML += `
       <div class="deck-block" id="${deckId}">
         <h2>${site.name}</h2>
-        <div class="cards ${site.count === 6 ? "six-tarot" : ""}">${drawCards(site)}</div>
+        <div class="cards ${site.count === 6 ? "six-tarot" : ""} ${site.id}">
+  ${drawCards(site)}
+</div>
        
         <button onclick='redraw("${deckId}", "${site.id}")'>다시 뽑기</button>
       </div>`;
@@ -466,6 +468,7 @@ function redraw(deckId, siteId) {
   </script>
 </body>
 </html>
+
 
 
 
