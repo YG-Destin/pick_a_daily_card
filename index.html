@@ -59,6 +59,13 @@
   background: white;
   border: 1px solid #ccc;
 }
+    /* 그랑 에띨라 전용: 위치 고정 */
+.cards.Lismon_G_E {
+  min-height: 180px;   /* 카드 한 줄 높이 고정 */
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+}
 
 
 /* 6장 타로 전용 */
@@ -183,7 +190,7 @@
       { id: "Book_of_Destiny",    name: "Book of Destiny", folder: "https://yg-destin.github.io/Book_of_Destiny/cards",            total: 33, count: 3, exts: ["JPG"] },
       { id: "Coffee_Card",       name: "Coffee Card",      folder: "https://yg-destin.github.io/Coffee_Card/cards",                 total: 32, count: 3, exts: ["jpg"] },
       { id: "rmtt",      name: "Romantic Tarot",     folder: "https://yg-destin.github.io/rmtt/cards",                total: 78, count: 6, exts: ["png"] },
-      { id: "GAT",      name: "Guardian Angel Tarot",         folder: "https://yg-destin.github.io/GAT/cards",                total: 78, count: 3, exts: ["png"] },
+      { id: "GAT",      name: "Guardian Angel Tarot",         folder: "https://yg-destin.github.io/GAT/cards",                total: 78, count: 1, exts: ["png"] },
       { id: "blt",       name: "Borderless Tarot",         folder: "https://yg-destin.github.io/blt/cards",                 total: 78, count: 6, exts: ["png"] },
       { id: "rm_ag",     name: "Romance Angel",    folder: "https://yg-destin.github.io/rm_ag/cards",               total: 44, count: 1, exts: ["png"] },
 
@@ -469,6 +476,7 @@ function redraw(deckId, siteId) {
   </script>
 </body>
 </html>
+
 
 
 
