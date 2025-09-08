@@ -526,10 +526,9 @@ else if (site.mode === "rune") {
 
   picked.forEach((rune, index) => {
     let reversed = Math.random() < 0.5;
-    // rune = ["ᚠ Fehu", "정 - 재산, 번영", "역 - 손실, 실패"]
     let parts = rune[0].split(" "); 
-    let runeChar = parts[0];   // ᚠ
-    let runeName = parts[1];   // Fehu
+    let runeChar = parts[0];   // 룬 문자
+    let runeName = parts[1];   // 룬 이름
     let meaningRaw = reversed ? rune[2] : rune[1]; 
     let [pos, meaning] = meaningRaw.split(" - "); 
     let runeId = `rune-meaning-${index}-${Date.now()}`;
@@ -540,11 +539,14 @@ else if (site.mode === "rune") {
                   justify-content:center; padding:8px; margin:5px; cursor:pointer;"
            onclick="toggleMeaning('${runeId}')">
 
-        <!-- 룬 문자 + 이름 한 줄 -->
-        <div style="font-size:2.2em;">${runeChar}</div>
+        <!-- 룬 문자 (정방향 or 역방향) -->
+        <div style="font-size:2.2em; ${reversed ? 'transform: rotate(180deg);' : ''}">
+          ${runeChar}
+        </div>
+        <!-- 룬 이름 -->
         <div style="font-size:0.9em; margin-top:2px;">${runeName}</div>
 
-        <!-- 토글 영역 -->
+        <!-- 토글로 열리는 부분 -->
         <div id="${runeId}" style="display:none; margin-top:5px; text-align:center;">
           <div style="font-size:0.9em; color:#666;">${pos}</div>
           <div style="font-size:1.1em; margin-top:3px;">${meaning}</div>
@@ -716,6 +718,7 @@ checked.forEach(item => {
   </script>
 </body>
 </html>
+
 
 
 
