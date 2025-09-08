@@ -534,22 +534,22 @@ else if (site.mode === "rune") {
     let runeId = `rune-meaning-${index}-${Date.now()}`;
 
     output += `
-      <div style="width:120px; border:1px solid #ccc; border-radius:6px; 
+      <div style="width:100px; border:1px solid #ccc; border-radius:6px; 
                   display:flex; flex-direction:column; align-items:center; 
                   justify-content:center; padding:8px; margin:5px; cursor:pointer;"
            onclick="toggleMeaning('${runeId}')">
 
         <!-- 룬 문자 (정방향 or 역방향) -->
-        <div style="font-size:2.2em; ${reversed ? 'transform: rotate(180deg);' : ''}">
+        <div style="font-size:2.0em; ${reversed ? 'transform: rotate(180deg);' : ''}">
           ${runeChar}
         </div>
         <!-- 룬 이름 -->
-        <div style="font-size:0.9em; margin-top:2px;">${runeName}</div>
+        <div style="font-size:0.7em; margin-top:2px;">${runeName}</div>
 
         <!-- 토글로 열리는 부분 -->
-        <div id="${runeId}" style="display:none; margin-top:5px; text-align:center;">
-          <div style="font-size:0.9em; color:#666;">${pos}</div>
-          <div style="font-size:1.1em; margin-top:3px;">${meaning}</div>
+        <div id="${runeId}" style="display:none; margin-top:4.5px; text-align:center;">
+          <div style="font-size:0.8em; color:#666;">${pos}</div>
+          <div style="font-size:1.0em; margin-top:2px;">${meaning}</div>
         </div>
       </div>
     `;
@@ -718,6 +718,7 @@ checked.forEach(item => {
   </script>
 </body>
 </html>
+
 
 
 
