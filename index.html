@@ -50,6 +50,19 @@
   align-items: center;     /* 세로 중앙 */
 }
 
+.cards-row .card-box {
+  flex: 0 0 30%;             /* 화면 폭의 30%씩 (3장 합쳐서 90%) */
+  max-width: 120px;          /* 너무 커지지 않게 제한 */
+  text-align: center;
+}
+
+.cards-row .card-box img {
+  width: 100%; 
+  height: auto;
+  border-radius: 8px;
+  box-shadow: 0 0 5px rgba(0,0,0,0.3);
+}
+
 /* 카드 이미지 기본값 (모든 덱 공통) */
 .cards img {
   width: 100%;       /* 칸을 꽉 채움 */
@@ -86,6 +99,33 @@
   transform: rotate(180deg);
 }
 
+/* 카페 오라클 전용 */
+.cards.drink_oracle {
+  display: flex;
+  justify-content: center;   /* 항상 중앙 */
+  gap: 10px;
+  margin-top: 10px;
+}
+.cards-row {
+  display: flex;
+  justify-content: center;   /* 항상 중앙 */
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.cards-row .card-box {
+  flex: 0 0 30%;             /* 화면 폭의 30%씩 (3장 합쳐서 90%) */
+  max-width: 120px;          /* 너무 커지지 않게 제한 */
+  text-align: center;
+}
+
+.cards-row .card-box img {
+  width: 100%; 
+  height: auto;
+  border-radius: 8px;
+  box-shadow: 0 0 5px rgba(0,0,0,0.3);
+}
+
 /* 6장 타로 전용 */
 .cards.six-tarot {
   min-height: 360px; /* 카드 틀이 덜 흔들리게 최소 높이 */
@@ -117,7 +157,7 @@
     
     .rune-card {
   display: inline-block;
-  margin: 10px;
+  margin: 8px;
   padding: 8px;
   border: 1px solid #ccc;
   border-radius: 6px;
@@ -169,7 +209,7 @@
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
       gap: 10px 20px;
-      max-width: 100%;
+      max-width: 90%;
       padding: 0 10px;
       text-align: left;
     }
@@ -190,7 +230,7 @@
     .rune-row {
   display: grid;
   grid-template-columns: repeat(3, 1fr); /* 항상 3개 */
-  gap: 10px;
+  gap: 7px;
   justify-items: center;
   margin-top: 10px;
 }
@@ -498,7 +538,7 @@
     let meaning = item[1];
     let astroId = `astro-meaning-${index}-${Date.now()}`; // 고유 ID
 
-    output += `      <div style="width:100px; border:1px solid #ccc; border-radius:6px;
+    output += `      <div style="width:90px; border:1px solid #ccc; border-radius:6px;
                   display:flex; flex-direction:column; align-items:center;
                   justify-content:center; padding:5px; margin:5px; cursor:pointer;"
            onclick="toggleMeaning('${astroId}')">
@@ -534,7 +574,7 @@ else if (site.mode === "rune") {
     let runeId = `rune-meaning-${index}-${Date.now()}`;
 
     output += `
-      <div style="width:100px; border:1px solid #ccc; border-radius:6px; 
+      <div style="width:90px; border:1px solid #ccc; border-radius:6px; 
                   display:flex; flex-direction:column; align-items:center; 
                   justify-content:center; padding:8px; margin:5px; cursor:pointer;"
            onclick="toggleMeaning('${runeId}')">
@@ -624,20 +664,20 @@ else if (site.id === "drink_oracle") {
     if (!picked.includes(choice)) picked.push(choice);
   }
 
-  return picked.map((c, index) => {
-    let cardId = `drink-meaning-${index}-${Date.now()}`; // 고유 ID
-    return `
-      <div style="display:inline-block; margin:5px; cursor:pointer; text-align:center;"
-           onclick="toggleMeaning('${cardId}')">
-        <img src="cards/${c.file}" 
-             style="width:100px; height:auto; border-radius:8px; box-shadow:0 0 5px rgba(0,0,0,0.3);">
-        <div id="${cardId}" style="display:none; margin-top:5px; font-size:0.9em;">
-          <div>${c.meaning}</div>
-          <div>${c.advice}</div>
+  return `<div class="cards-row">` +
+    picked.map((c, index) => {
+      let cardId = `drink-meaning-${index}-${Date.now()}`;
+      return `
+        <div class="card-box" onclick="toggleMeaning('${cardId}')">
+          <img src="cards/${c.file}">
+          <div id="${cardId}" class="meaning" style="display:none; margin-top:5px; font-size:0.9em;">
+            <div>${c.meaning}</div>
+            <div>${c.advice}</div>
+          </div>
         </div>
-      </div>
-    `;
-  }).join("");
+      `;
+    }).join("") +
+  `</div>`;
 }
 
 
