@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>데일리라도 뽑아봅시다⭐</title>
+  <style>
+    body {
+      font-family: system-ui, sans-serif;
+      text-align: center;
+      margin: 0;
+      padding: 0;
+    }
+    h1 {
+      margin: 15px 0;
+      font-size: 1.8rem;
+    }
+    h2 {
+      margin-top: 20px;
+      font-size: 1.4rem;
+    }
+/* 기본: 여러 장일 때 */
+.cards {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+/* 6장 타로 전용 → 3x2 그리드 */
+.cards.six-tarot {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 3px;
+  justify-items: center;
+  padding: 0 3px;
+}
+/* 그랑 에띨라 전용: 항상 3장 가로 */
+.cards.Lismon_G_E {
+  display: grid !important;
+  grid-template-columns: repeat(3, auto);
+  justify-content: center;
+  gap: 8px;
+}
+/* 1~2장짜리 덱 전용 */
+.cards.few-cards {
+  display: flex;
+  justify-content: center; /* 가로 중앙 */
+  align-items: center;     /* 세로 중앙 */
+}
+
+/* 카드 이미지 기본값 (모든 덱 공통) */
+.cards img {
+  width: 100%;       /* 칸을 꽉 채움 */
+  height: auto;      /* 세로 비율 유지 */
+  max-width: 300px;  /* 너무 커지지 않게 제한 */
+  object-fit: contain; /* 그림 전체 보이게 */
+  background: white;   /* 흰 배경 */
+  border: 1px solid #ccc; /* 옅은 회색 테두리 */
+  border-radius: 6px;     /* 모서리 살짝 둥글림 */
+}
+/* 보더리스 & 로맨틱 전용 */
+.cards.blt img,
+.cards.rmtt img {
+  width: 100%;
+  aspect-ratio: 7 / 12;   /* 7:12 비율 강제 */
+  object-fit: contain;    /* 이미지 전체 다 보이게 */
+  max-width: 300px;
+  background: white;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+/* 그랑 에띨라 전용 카드 */
+.cards.Lismon_G_E img {
+  width: 110px;
+  height: 165px;
+  object-fit: cover;
+  background: white;
+  border: 1px solid #ccc;
+  display: block;          /* inline-block 높이 차이 방지 */
+}
+
+/* 회전은 이미지를 감싼 div가 아니라 img에 직접 적용 */
+.cards.Lismon_G_E .rotated {
+  transform: rotate(180deg);
+}
+
+/* 6장 타로 전용 */
+.cards.six-tarot {
+  min-height: 360px; /* 카드 틀이 덜 흔들리게 최소 높이 */
+}
+
+/* 3장 카드 전용 */
+.cards:not(.six-tarot) {
+  min-height: 180px;
+}
+    
+ /* 공통 3열 레이아웃 */
+.three-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  justify-items: center;
+  margin-top: 10px;
+}
+
+/* 점성술 카드 전용 */
+.astro-card {
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  padding: 10px;
+  font-size: 1.5em;
+  text-align: center;
+  background: #fff;
+}   
+    
+    .rune-card {
+  display: inline-block;
+  margin: 10px;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  text-align: center; /* 중앙 정렬 */
+}
+    
+/* 모바일 대응 (세로 화면에서 카드가 너무 작아지지 않게) */
+@media (max-width: 768px) {
+  .cards {
+    grid-template-columns: repeat(3, 1fr); /* 작은 화면도 항상 3장 */
+  }
+  .cards img {
+    max-width: none; /* 모바일에선 크기 제한 해제 */
+  }
+}
+    .input-row {
+      margin: 15px 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      padding: 0 10px;
+    }
+    .question-input {
+      padding: 8px;
+      width: 100%;
+      max-width: 280px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+    button {
+      padding: 6px 12px;
+      border: none;
+      border-radius: 6px;
+      background-color: #4CAF50;
+      color: white;
+      font-size: 14px;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    button:hover {
+      background-color: #45a049;
+    }
+
+    /* 체크박스 옵션 영역 */
+    .options {
+      margin: 20px auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: 10px 20px;
+      max-width: 100%;
+      padding: 0 10px;
+      text-align: left;
+    }
+    .options label {
+      white-space: nowrap;
+    }
+
+    .deck-block {
+      margin-bottom: 40px;
+      padding: 0 10px;
+    }
+
+ .iching-symbols {
+  font-size: 1.8em;
+  line-height: 0.6; /* 세로 간격 줄임 */
+  margin-top: 0px; /* 위쪽 여백 축소 */
+}
+    .rune-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* 항상 3개 */
+  gap: 10px;
+  justify-items: center;
+  margin-top: 10px;
+}
+    /* 모바일 화면에서 버튼 크기 조정 */
+    @media (max-width: 480px) {
+      button {
+        font-size: 13px;
+        padding: 5px 10px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <h1>데일리라도 뽑아봅시다⭐</h1>
+
+<!-- 질문 입력 -->
+<div class="input-row">
+  <input type="text" id="question" class="question-input" placeholder="질문을 입력하세요" />
+</div>
+  
+<!-- 덱 선택 체크박스 -->
+<div class="options" id="options"></div>
+
+<!-- 확인 버튼: 체크박스 밑 중앙 -->
+<div style="margin: 20px 0; text-align: center;">
+  <button onclick="showSelected()">확인</button>
+</div>
+  
+  <!-- 결과 -->
+  <div id="results"></div>
+
+  <script>
+    const sites = [
+  { id: "JiNi_Kipper", name: "JiNi Kipper", folder: "https://yg-destin.github.io/cartomancy/other/JiNi_Kipper/cards", total: 36, startFrom: 1, count: 3, exts: ["jpg"] },
+  { id: "drink_oracle", name: "Cafe Oracle", count: 3, 
+  items: [
+    { file: "01.jpg", meaning: "본질, 집중", advice: "핵심에 집중하라." },
+    { file: "02.jpg", meaning: "단순함, 명료", advice: "불필요한 것을 덜어내라." },
+    { file: "03.jpg", meaning: "조화, 부드러움", advice: "부드럽게 타협하라." },
+    { file: "04.jpg", meaning: "달콤한 위로", advice: "작은 즐거움을 누려라." },
+    { file: "05.jpg", meaning: "욕망, 다층적 매력", advice: "욕망을 인정하라." },
+    { file: "06.jpg", meaning: "화려한 포장", advice: "겉보다 속을 살펴라." },
+    { file: "07.jpg", meaning: "균형, 정성", advice: "균형 잡힌 태도를 유지하라." },
+    { file: "08.jpg", meaning: "유혹, 짧은 쾌락", advice: "순간의 달콤함을 즐겨라." },
+    { file: "09.jpg", meaning: "대비, 긴장 속 조화", advice: "대립 속에서 길을 찾아라." },
+    { file: "10.jpg", meaning: "절제된 세련됨", advice: "작은 차이가 큰 힘을 만든다." },
+    { file: "11.jpg", meaning: "인내, 깊음", advice: "기다림 끝에 결실이 온다." },
+    { file: "12.jpg", meaning: "혁신, 실험", advice: "새로운 방식을 시도하라." },
+    { file: "13.jpg", meaning: "전환점, 활력", advice: "흔들림 속에서 힘을 얻어라." },
+    { file: "14.jpg", meaning: "포용, 유대", advice: "마음을 나누어라." },
+    { file: "15.jpg", meaning: "평온, 치유", advice: "차분히 숨을 고르라." },
+    { file: "16.jpg", meaning: "포근한 위로", advice: "따뜻하게 자신을 감싸라." },
+    { file: "17.jpg", meaning: "풍요, 판타지", advice: "달콤한 상상을 허락하라." },
+    { file: "18.jpg", meaning: "전통, 질서", advice: "기본을 지켜라." },
+    { file: "19.jpg", meaning: "치유, 안정", advice: "몸과 마음을 쉬게 하라." },
+    { file: "20.jpg", meaning: "활력, 신선함", advice: "생기를 불어넣어라." },
+    { file: "21.jpg", meaning: "소박함, 건강", advice: "단순한 삶을 즐겨라." },
+    { file: "22.jpg", meaning: "따뜻한 일상", advice: "작은 일상에 감사하라." },
+    { file: "23.jpg", meaning: "새 기운, 활력", advice: "상쾌한 시작을 열어라." },
+    { file: "24.jpg", meaning: "건강, 회복", advice: "몸을 돌보라." },
+    { file: "25.jpg", meaning: "생명력", advice: "자연의 힘을 받아들여라." },
+    { file: "26.jpg", meaning: "혼합, 가능성", advice: "다양성을 포용하라." },
+    { file: "27.jpg", meaning: "전통, 유대", advice: "뿌리를 기억하라." },
+    { file: "28.jpg", meaning: "대체, 새로운 시각", advice: "다른 길을 모색하라." },
+    { file: "29.jpg", meaning: "정, 나눔", advice: "따뜻한 마음을 나누어라." },
+    { file: "30.jpg", meaning: "보호, 지혜", advice: "예방이 곧 지혜다." },
+    { file: "31.jpg", meaning: "위로, 안정", advice: "마음을 녹여라." },
+    { file: "32.jpg", meaning: "순수, 시작", advice: "비워야 채워진다." }
+  ]
+},
+  { id: "Oracle_JiNi", name: "Oracle JiNi", folder: "https://yg-destin.github.io/cartomancy/other/Oracle_JiNi/cards", total: 53, startFrom: 0, count: 3, exts: ["PNG"] },
+  { id: "JiNi_Belline", name: "JiNi Belline", folder: "https://yg-destin.github.io/cartomancy/other/JiNi_Belline/cards", total: 53, startFrom: 0, count: 3, exts: ["JPG"] },
+  { id: "JiNi_Tarot", name: "JiNi Tarot", folder: "https://yg-destin.github.io/cartomancy/tarot/JiNi_Tarot/cards", total: 78, startFrom: 0, count: 6, exts: ["jpeg"] },
+  { id: "ori_kip", name: "Original Kipper", folder: "https://yg-destin.github.io/cartomancy/other/ori_kip/cards", total: 36, startFrom: 1, count: 3, exts: ["png"] },
+  { id: "Raming_E_F_G_O", name: "Eastern Four Guardians", folder: "https://yg-destin.github.io/Raming_E_F_G_O/cards", total: 36, startFrom: 1, count: 3, exts: ["jpg"] },
+  { id: "Sibylle_des_Salons", name: "Sibylle des Salons", folder: "https://yg-destin.github.io/cartomancy/other/Sibylle_des_Salons/cards", total: 52, startFrom: 1, count: 3, exts: ["jpg"] },
+  { id: "horos_bell", name: "Horoscope Belline", folder: "https://yg-destin.github.io/cartomancy/other/horos_bell/cards", total: 53, startFrom: 1, count: 3, exts: ["png"] },
+  { id: "Book_of_Destiny", name: "Book of Destiny", folder: "https://yg-destin.github.io/cartomancy/other/Book_of_Destiny/cards", total: 33, startFrom: 1, count: 3, exts: ["JPG"] },
+  { id: "Coffee_Card", name: "Coffee Card", folder: "https://yg-destin.github.io/cartomancy/other/Coffee_Card/cards", total: 32, startFrom: 1, count: 3, exts: ["jpg"] },
+  { id: "rmtt", name: "Romantic Tarot", folder: "https://yg-destin.github.io/cartomancy/tarot/rmtt/cards", total: 78, startFrom: 0, count: 6, exts: ["png"] },
+  { id: "blt", name: "Borderless Tarot", folder: "https://yg-destin.github.io/cartomancy/tarot/blt/cards", total: 78, startFrom: 0, count: 6, exts: ["png"] },
+  { id: "Lismon_G_E", name: "Lismon Grand Etteilla", folder: "https://yg-destin.github.io/cartomancy/tarot/Lismon_G_E/cards", total: 78, startFrom: 0, count: 3, exts: ["jpg"], mode: "reversible" },
+  { id: "Astrology_card", name: "Astrology card", mode: "astro", groups: {
+   houses: [
+  ["①", "자아, 외모, 태도"],
+  ["②", "자원, 재정, 가치"],
+  ["③", "학습, 형제, 소통"],
+  ["④", "가정, 뿌리, 내면"],
+  ["⑤", "창의, 연애, 자녀"],
+  ["⑥", "일상, 건강, 봉사"],
+  ["⑦", "파트너, 관계, 계약"],
+  ["⑧", "변화, 성, 공유자원"],
+  ["⑨", "철학, 여행, 진리"],
+  ["⑩", "사회적 지위, 직업"],
+  ["⑪", "친구, 네트워크, 희망"],
+  ["⑫", "무의식, 은둔, 영성"]
+],
+    signs: [
+  ["♈", "시작, 용기, 추진력"],
+  ["♉", "안정, 물질, 감각"],
+  ["♊", "지식, 소통, 교류"],
+  ["♋", "가정, 감정, 보호"],
+  ["♌", "창의, 자존심, 표현"],
+  ["♍", "분석, 정리, 봉사"],
+  ["♎", "균형, 관계, 조화"],
+  ["♏", "열정, 깊이, 변형"],
+  ["♐", "탐험, 진리, 철학"],
+  ["♑", "목표, 규율, 성취"],
+  ["♒", "혁신, 집단, 자유"],
+  ["♓", "영감, 희생, 무의식"]
+],
+    planets: [
+  ["☉", "자아, 생명력, 의식"],
+  ["☽", "감정, 습관, 본능"],
+  ["☿", "사고, 소통, 학습"],
+  ["♀", "사랑, 미, 가치"],
+  ["♂", "행동, 에너지, 욕망"],
+  ["♃", "성장, 확장, 행운"],
+  ["♄", "책임, 한계, 구조"],
+  ["♅", "혁신, 변화, 독립"],
+  ["♆", "꿈, 영감, 무의식"],
+  ["♇", "권력, 변형, 심연"],
+  ["☊", "운명적 과제, 성장"],
+  ["☋", "익숙한 과거, 습관"]
+]
+  }
+  },
+
+  { id: "runes", name: "Rune", mode: "rune", count: 3, items: [
+        ["ᚠ Fehu", "정 - 재산, 번영", "역 - 손실, 실패"], 
+        ["ᚢ Uruz", "정 - 힘, 용기", "역 - 약함, 무기력"], 
+        ["ᚦ Thurisaz", "정 - 거대한 힘, 저항", "역 - 충동, 위험"],
+        ["ᚨ Ansuz", "정 - 신들의 메시지", "역 - 혼란, 거짓말"],
+        ["ᚱ Raido", "정 - 여행, 변화", "역 - 지연, 정체"],
+        ["ᚲ Kenaz", "정 - 지식, 계몽", "역 - 무지, 혼란"],
+        ["ᚷ Gebo", "정 - 선물, 파트너십", "역 - 불균형, 이기심"],
+        ["ᚹ Wunjo", "정 - 기쁨, 조화", "역 - 불행, 다툼"],
+        ["ᚺ Hagalaz", "정 - 혼돈, 변화", "역 - 파괴, 재앙"],
+        ["ᚾ Nauthiz", "정 - 필요, 시련", "역 - 저항, 고통"],
+        ["ᛁ Isa", "정 - 정지, 침착", "역 - 정체, 고립"],
+        ["ᛃ Jera", "정 - 수확, 주기", "역 - 지연, 예상치 못한 변화"],
+        ["ᛇ Eiwaz", "정 - 보호, 인내", "역 - 혼란, 불안"],
+        ["ᛈ Perthro", "정 - 운명, 비밀", "역 - 숨겨진 위험, 상실"],
+        ["ᛉ Algiz", "정 - 수호, 본능", "역 - 경고, 위험"],
+        ["ᛋ Sowilo", "정 - 태양, 성공", "역 - 자만, 에너지 소진"],
+        ["ᛏ Tiwaz", "정 - 정의, 용기", "역 - 실패, 불공정"],
+        ["ᛒ Berkano", "정 - 성장, 출산", "역 - 정체, 쇠퇴"],
+        ["ᛖ Ehwaz", "정 - 이동, 신뢰", "역 - 불신, 막힘"],
+        ["ᛗ Mannaz", "정 - 인간, 공동체", "역 - 외로움, 배신"],
+        ["ᛚ Laguz", "정 - 흐름, 직관", "역 - 혼란, 약함"],
+        ["ᛜ Ingwaz", "정 - 창조력, 성취", "역 - 지연, 좌절"],
+        ["ᛞ Dagaz", "정 - 변화, 깨달음", "역 - 불확실성, 두려움"],
+        ["ᛟ Othala", "정 - 유산, 전통", "역 - 갈등, 소외"],
+        ["□ Empty", "정 - 미지의 운명", "역 - 미지의 운명"] 
+    ]
+},
+{ 
+  id: "flag", 
+  name: "Five Direction", 
+  mode: "obang", 
+  count: 2, 
+  items: [
+    { 
+      name: '흰색', code: 'white', text: 'black',
+      keywords: { 
+        positive: ['결단','규율','지혜','정의','명확함'], 
+        negative: ['냉정','단절','엄격','차가움','완고함'] 
+      }
+    },
+    { 
+      name: '빨간색', code: 'red', text: 'white',
+      keywords: { 
+        positive: ['열정','명예','표현','활력','추진력'], 
+        negative: ['파괴','분노','소모','성급함','무모함'] 
+      }
+    },
+    { 
+      name: '초록색', code: 'green', text: 'white',
+      keywords: { 
+        positive: ['지혜','유연','소통','직관','적응'], 
+        negative: ['불안','산만','은폐','혼란','우유부단'] 
+      }
+    },
+    { 
+      name: '파란색', code: 'blue', text: 'white',
+      keywords: { 
+        positive: ['성장','창의','도덕','확장','협력'], 
+        negative: ['고집','충돌','불안정','초조','갈등'] 
+      }
+    },
+    { 
+      name: '노란색', code: 'yellow', text: 'black',
+      keywords: { 
+        positive: ['안정','책임','현실','신뢰','인내'], 
+        negative: ['집착','고립','답답함','우유부단','권위주의'] 
+      }
+    }
+  ] 
+},
+
+  { id: "yijing", name: "YiQing", mode: "iching", count: 2, items: [
+      { number: 1, name: "중천건", symbols: ["⚊", "⚊", "⚊", "⚊", "⚊", "⚊"] },
+      { number: 2, name: "중지곤", symbols: ["⚋", "⚋", "⚋", "⚋", "⚋", "⚋"] },
+      { number: 3, name: "수뢰둔", symbols: ["⚋", "⚊", "⚋", "⚋", "⚋", "⚊"] },    
+      { number: 4, name: "산수몽", symbols: ["⚊", "⚋", "⚋", "⚋", "⚊", "⚋"] },    
+      { number: 5, name: "수천수", symbols: ["⚋", "⚊", "⚋", "⚊", "⚊", "⚊"] },    
+      { number: 6, name: "천수송", symbols: ["⚊", "⚊", "⚊", "⚋", "⚊", "⚋"] },    
+      { number: 7, name: "지수사", symbols: ["⚋", "⚋", "⚋", "⚋", "⚊", "⚋"] },    
+      { number: 8, name: "수지비", symbols: ["⚋", "⚊", "⚋", "⚋", "⚋", "⚋"] },    
+      { number: 9, name: "풍천소축", symbols: ["⚊", "⚊", "⚋", "⚊", "⚊", "⚊"] },    
+      { number: 10, name: "천택리", symbols: ["⚊", "⚊", "⚊", "⚋", "⚊", "⚊"] },    
+      { number: 11, name: "지천태", symbols: ["⚋", "⚋", "⚋", "⚊", "⚊", "⚊"] },    
+      { number: 12, name: "천지비", symbols: ["⚊", "⚊", "⚊", "⚋", "⚋", "⚋"] },    
+      { number: 13, name: "천화동인", symbols: ["⚊", "⚊", "⚊", "⚊", "⚋", "⚊"] },   
+      { number: 14, name: "화천대유", symbols: ["⚊", "⚋", "⚊", "⚊", "⚊", "⚊"] },     
+      { number: 15, name: "지산겸", symbols: ["⚋", "⚋", "⚋", "⚊", "⚋", "⚋"] },      
+      { number: 16, name: "뇌지예", symbols: ["⚋", "⚋", "⚊", "⚋", "⚋", "⚋"] },     
+      { number: 17, name: "택뢰수", symbols: ["⚋", "⚊", "⚊", "⚋", "⚋", "⚊"] },       
+      { number: 18, name: "산풍고", symbols: ["⚊", "⚋", "⚋", "⚊", "⚊", "⚋"] },        
+      { number: 19, name: "지택림", symbols: ["⚋", "⚋", "⚋", "⚋", "⚊", "⚊"] },       
+      { number: 20, name: "풍지관", symbols: ["⚊", "⚊", "⚋", "⚋", "⚋", "⚋"] },         
+      { number: 21, name: "화뢰서합", symbols: ["⚊", "⚋", "⚊", "⚋", "⚋", "⚊"] },       
+      { number: 22, name: "산화비", symbols: ["⚊", "⚋", "⚋", "⚊", "⚋", "⚊"] },      
+      { number: 23, name: "산지박", symbols: ["⚊", "⚋", "⚋", "⚋", "⚋", "⚋"] },       
+      { number: 24, name: "지뢰복", symbols: ["⚋", "⚋", "⚋", "⚋", "⚋", "⚊"] },        
+      { number: 25, name: "천뢰무망", symbols: ["⚊", "⚊", "⚊", "⚋", "⚋", "⚊"] },     
+      { number: 26, name: "산천대축", symbols: ["⚊", "⚋", "⚋", "⚊", "⚊", "⚊"] },     
+      { number: 27, name: "산뢰이", symbols: ["⚊", "⚋", "⚋", "⚋", "⚋", "⚊"] },       
+      { number: 28, name: "택풍대과", symbols: ["⚋", "⚊", "⚊", "⚊", "⚊", "⚋"] },     
+      { number: 29, name: "중수감", symbols: ["⚋", "⚊", "⚋", "⚋", "⚊", "⚋"] },     
+      { number: 30, name: "중화리", symbols: ["⚊", "⚋", "⚊", "⚊", "⚋", "⚊"] },     
+      { number: 31, name: "택산함", symbols: ["⚋", "⚊", "⚊", "⚊", "⚋", "⚋"] },    
+      { number: 32, name: "뇌풍항", symbols: ["⚋", "⚋", "⚊", "⚊", "⚊", "⚋"] },    
+      { number: 33, name: "천산돈", symbols: ["⚊", "⚊", "⚊", "⚊", "⚋", "⚋"] },     
+      { number: 34, name: "뇌천대장", symbols: ["⚋", "⚋", "⚊", "⚊", "⚊", "⚊"] },      
+      { number: 35, name: "화지진", symbols: ["⚊", "⚋", "⚊", "⚋", "⚋", "⚋"] },     
+      { number: 36, name: "지화명", symbols: ["⚋", "⚋", "⚋", "⚊", "⚋", "⚊"] },     
+      { number: 37, name: "풍화가인", symbols: ["⚊", "⚊", "⚋", "⚊", "⚋", "⚊"] },      
+      { number: 38, name: "화택규", symbols: ["⚊", "⚋", "⚊", "⚋", "⚊", "⚊"] },     
+      { number: 39, name: "수산건", symbols: ["⚋", "⚊", "⚋", "⚊", "⚋", "⚋"] },     
+      { number: 40, name: "뇌수해", symbols: ["⚋", "⚋", "⚊", "⚋", "⚊", "⚋"] },     
+      { number: 41, name: "산택손", symbols: ["⚊", "⚋", "⚋", "⚋", "⚊", "⚊"] },
+      { number: 42, name: "풍뢰익", symbols: ["⚊", "⚊", "⚋", "⚋", "⚋", "⚊"] },
+      { number: 43, name: "택천쾌", symbols: ["⚋", "⚊", "⚊", "⚊", "⚊", "⚊"] },
+      { number: 44, name: "천풍구", symbols: ["⚊", "⚊", "⚊", "⚊", "⚊", "⚋"] },
+      { number: 45, name: "택지췌", symbols: ["⚋", "⚊", "⚊", "⚋", "⚋", "⚋"] },
+      { number: 46, name: "지풍승", symbols: ["⚋", "⚋", "⚋", "⚊", "⚊", "⚋"] },
+      { number: 47, name: "택수곤", symbols: ["⚋", "⚊", "⚊", "⚋", "⚊", "⚋"] },
+      { number: 48, name: "수풍정", symbols: ["⚋", "⚊", "⚋", "⚊", "⚊", "⚋"] },
+      { number: 49, name: "택화혁", symbols: ["⚋", "⚊", "⚊", "⚊", "⚋", "⚊"] },
+      { number: 50, name: "화풍정", symbols: ["⚊", "⚋", "⚊", "⚊", "⚊", "⚋"] },
+      { number: 51, name: "중뢰진", symbols: ["⚋", "⚋", "⚊", "⚋", "⚋", "⚊"] },
+      { number: 52, name: "중산간", symbols: ["⚊", "⚋", "⚋", "⚊", "⚋", "⚋"] },
+      { number: 53, name: "풍산점", symbols: ["⚊", "⚊", "⚋", "⚊", "⚋", "⚋"] },
+      { number: 54, name: "뇌택귀매", symbols: ["⚋", "⚋", "⚊", "⚋", "⚊", "⚊"] },
+      { number: 55, name: "뇌화풍", symbols: ["⚋", "⚋", "⚊", "⚊", "⚋", "⚊"] },
+      { number: 56, name: "화산려", symbols: ["⚊", "⚋", "⚊", "⚊", "⚋", "⚋"] },
+      { number: 57, name: "중풍손", symbols: ["⚊", "⚊", "⚋", "⚊", "⚊", "⚋"] },
+      { number: 58, name: "중택태", symbols: ["⚋", "⚊", "⚊", "⚋", "⚊", "⚊"] },
+      { number: 59, name: "풍수환", symbols: ["⚊", "⚊", "⚋", "⚋", "⚊", "⚋"] },
+      { number: 60, name: "수택절", symbols: ["⚋", "⚊", "⚋", "⚋", "⚊", "⚊"] },
+      { number: 61, name: "풍택중부", symbols: ["⚊", "⚊", "⚋", "⚋", "⚊", "⚊"] },
+      { number: 62, name: "뇌산소과", symbols: ["⚋", "⚋", "⚊", "⚊", "⚋", "⚋"] },
+      { number: 63, name: "수화기제", symbols: ["⚋", "⚊", "⚋", "⚊", "⚋", "⚊"] },
+      { number: 64, name: "화수미제", symbols: ["⚊", "⚋", "⚊", "⚋", "⚊", "⚋"] }
+        ]
+    },
+  { id: "GAT", name: "Guardian Angel Tarot", folder: "https://yg-destin.github.io/cartomancy/other/GAT/cards", total: 78, startFrom: 0, count: 1, exts: ["png"] },
+  { id: "rm_ag", name: "Romance Angel", folder: "https://yg-destin.github.io/cartomancy/other/rm_ag/cards", total: 44, startFrom: 1, count: 1, exts: ["png"] }  
+];
+
+    // 체크박스 자동 생성
+    const optionsDiv = document.getElementById("options");
+    sites.forEach(site => {
+      const label = document.createElement("label");
+      label.innerHTML = `<input type="checkbox" value="${site.id}"> ${site.name}`;
+      optionsDiv.appendChild(label);
+    });
+
+   function drawCards(site) {
+  // 1) 에띨라 같은 정역 카드
+  if (site.mode === "reversible") {
+    let picked = [];
+    while (picked.length < site.count) {
+      let num = Math.floor(Math.random() * site.total);
+      let ext = site.exts[Math.floor(Math.random() * site.exts.length)];
+      let n = String(num).padStart(2, "0") + "." + ext;
+      let reversed = Math.random() < 0.5;
+      picked.push({ file: n, reversed });
+    }
+    return picked.map(card => `
+  <img src="${site.folder}/${card.file}" 
+       alt="Card" 
+       class="${card.reversed ? 'rotated' : ''}">
+`).join("");
+  }
+ 
+    // 2) 점성술 카드 (하우스 + 별자리 + 행성)
+  else if (site.mode === "astro") {
+  let house  = site.groups.houses[Math.floor(Math.random() * site.groups.houses.length)];
+  let sign   = site.groups.signs[Math.floor(Math.random() * site.groups.signs.length)];
+  let planet = site.groups.planets[Math.floor(Math.random() * site.groups.planets.length)];
+  
+    
+  let items = [house, sign, planet];
+  let output = `<div class="three-grid">`;
+
+  items.forEach((item, index) => {
+    let symbol = item[0];
+    let meaning = item[1];
+    let astroId = `astro-meaning-${index}-${Date.now()}`; // 고유 ID
+
+    output += `      <div style="width:100px; border:1px solid #ccc; border-radius:6px;
+                  display:flex; flex-direction:column; align-items:center;
+                  justify-content:center; padding:5px; margin:5px; cursor:pointer;"
+           onclick="toggleMeaning('${astroId}')">
+        <div style="font-size:2em;">${symbol}</div>
+        <div id="${astroId}" style="display:none; margin-top:5px; font-size:0.9em; text-align:center;">
+          ${meaning}
+        </div>
+      </div>
+    `;
+  });
+
+  output += `</div>`;
+  return output;
+}
+    
+ // 3) 룬 (정방향/역방향)
+else if (site.mode === "rune") {
+  let picked = [];
+  while (picked.length < site.count) {
+    let choice = site.items[Math.floor(Math.random() * site.items.length)];
+    if (!picked.includes(choice)) picked.push(choice);
+  }
+
+  let output = `<div class="three-grid">`;
+
+  picked.forEach((rune, index) => {
+    let reversed = Math.random() < 0.5;
+    let parts = rune[0].split(" "); 
+    let runeChar = parts[0];   // 룬 문자
+    let runeName = parts[1];   // 룬 이름
+    let meaningRaw = reversed ? rune[2] : rune[1]; 
+    let [pos, meaning] = meaningRaw.split(" - "); 
+    let runeId = `rune-meaning-${index}-${Date.now()}`;
+
+    output += `
+      <div style="width:100px; border:1px solid #ccc; border-radius:6px; 
+                  display:flex; flex-direction:column; align-items:center; 
+                  justify-content:center; padding:8px; margin:5px; cursor:pointer;"
+           onclick="toggleMeaning('${runeId}')">
+
+        <!-- 룬 문자 (정방향 or 역방향) -->
+        <div style="font-size:2.0em; ${reversed ? 'transform: rotate(180deg);' : ''}">
+          ${runeChar}
+        </div>
+        <!-- 룬 이름 -->
+        <div style="font-size:0.7em; margin-top:2px;">${runeName}</div>
+
+        <!-- 토글로 열리는 부분 -->
+        <div id="${runeId}" style="display:none; margin-top:4.5px; text-align:center;">
+          <div style="font-size:0.8em; color:#666;">${pos}</div>
+          <div style="font-size:1.0em; margin-top:2px;">${meaning}</div>
+        </div>
+      </div>
+    `;
+  });
+
+  output += `</div>`;
+  return output;
+}
+
+      
+  // 4) 오방색 (사각형 색상칸)
+ else if (site.mode === "obang") {
+  let picked = [];
+  while (picked.length < site.count) {
+    let choice = site.items[Math.floor(Math.random() * site.items.length)];
+    if (!picked.includes(choice)) picked.push(choice);
+  }
+
+  return picked.map((c, index) => {
+    const elemId = `obang-meaning-${index}-${Date.now()}`;
+    const itemIndex = site.items.indexOf(c);
+    return `
+      <div style="
+        display:inline-block;
+        width:100px;
+        min-height:50px;
+        margin:5px;
+        background-color:${c.code};
+        color:${c.text};
+        border-radius:8px;
+        font-weight:bold;
+        box-shadow:0 0 5px rgba(0,0,0,0.3);
+        cursor:pointer;
+        text-align:center;
+        padding:10px;"
+        onclick="showObang('${elemId}', ${itemIndex})">
+        
+        <div id="${elemId}" style="line-height:40px; font-size:1.2em;">
+          ${c.name}
+        </div>
+      </div>
+    `;
+  }).join("");
+}
+
+function showObang(id, idx) {
+  const div = document.getElementById(id);
+  if (div.dataset.shown === "true") return; // 한번만 실행
+  div.dataset.shown = "true";
+
+  const c = sites.find(s => s.mode === "obang").items[idx]; // 인덱스로 다시 참조
+  const isPositive = Math.random() < 0.5;
+  const type = isPositive ? '<긍정>' : '<부정>';
+  const words = isPositive ? c.keywords.positive : c.keywords.negative;
+
+  // 두 개씩 줄바꿈
+  let listText = "";
+  for (let i = 0; i < words.length; i += 2) {
+    listText += words.slice(i, i+2).join(' · ') + "<br>";
+  }
+
+  div.innerHTML = `
+    <div style="font-size:9px; margin-bottom:3px; text-align:center;">${type}</div>
+    <div style="font-size:13px; text-align:center; line-height:1.4;">
+      ${listText}
+    </div>
+  `;
+}
+
+  // 5) 주역 (괘 세로 배열)
+else if (site.mode === "iching") {
+  let picked = [];
+  while (picked.length < site.count) {
+    let choice = site.items[Math.floor(Math.random() * site.items.length)];
+    if (!picked.includes(choice)) picked.push(choice);
+  }
+  return picked.map(hex => `
+    <div style="margin:10px; padding:8px; border:1px solid #ccc; border-radius:6px; display:inline-block; text-align:center;">
+      <div><b>${hex.number}. ${hex.name}</b></div>
+      <div class="iching-symbols">
+  ${hex.symbols.slice().reverse().join("<br>")}
+</div>
+    </div>
+  `).join("");
+}
+
+
+// drawCards 함수 내부에 추가
+else if (site.id === "drink_oracle") {
+  let picked = [];
+  while (picked.length < site.count) {
+    let choice = site.items[Math.floor(Math.random() * site.items.length)];
+    if (!picked.includes(choice)) picked.push(choice);
+  }
+
+  return picked.map((c, index) => {
+    let cardId = `drink-meaning-${index}-${Date.now()}`; // 고유 ID
+    return `
+      <div style="display:inline-block; margin:5px; cursor:pointer; text-align:center;"
+           onclick="toggleMeaning('${cardId}')">
+        <img src="cards/${c.file}" 
+             style="width:100px; height:auto; border-radius:8px; box-shadow:0 0 5px rgba(0,0,0,0.3);">
+        <div id="${cardId}" style="display:none; margin-top:5px; font-size:0.9em;">
+          <div>${c.meaning}</div>
+          <div>${c.advice}</div>
+        </div>
+      </div>
+    `;
+  }).join("");
+}
+
+
+// 6) 기본 이미지 카드 (타로/오라클/카르토망시 등)
+else {
+  let picked = [];
+  while (picked.length < site.count) {
+    let num = Math.floor(Math.random() * site.total) + (site.startFrom ?? 0);
+    let ext = site.exts[Math.floor(Math.random() * site.exts.length)];
+    let n = String(num).padStart(2, "0") + "." + ext;
+    if (!picked.includes(n)) picked.push(n);
+  }
+
+  // ✅ 3장짜리 → 3열 그리드
+  if (site.count === 3) {
+    return `<div class="three-grid">` + 
+      picked.map(f => `<img src="${site.folder}/${f}" alt="Card">`).join("") +
+    `</div>`;
+  }
+
+  // ✅ 1~2장짜리 → 중앙 정렬
+  if (site.count <= 2) {
+    return `<div class="cards few-cards">` +
+      picked.map(f => `<img src="${site.folder}/${f}" alt="Card">`).join("") +
+    `</div>`;
+  }
+
+  // ✅ 그 외(6장 등) → 기존 방식
+  return picked.map(f => 
+    `<img src="${site.folder}/${f}" alt="Card">`
+  ).join("");
+} // ← 이거 하나만! drawCards의 else 닫기
+}
+
+    // 확인 버튼 눌렀을 때
+      function showSelected() {
+      const checked = document.querySelectorAll('input[type="checkbox"]:checked');
+      const results = document.getElementById("results");
+      results.innerHTML = "";
+
+      // 질문 표시
+      const question = document.getElementById("question").value;
+      if (question) {
+        results.innerHTML = `<h2>질문: ${question}</h2>`;
+      }
+
+    // 선택된 덱 카드 표시
+checked.forEach(item => {
+  const site = sites.find(s => s.id === item.value);
+  if (site) {
+    const deckId = "deck-" + site.id;
+    results.innerHTML += `
+      <div class="deck-block" id="${deckId}">
+        <h2>${site.name}</h2>
+        <div class="cards ${site.count === 6 ? "six-tarot" : ""} ${site.id}">
+  ${drawCards(site)}
+</div>
+       
+        <button onclick='redraw("${deckId}", "${site.id}")'>다시 뽑기</button>
+      </div>`;
+  }
+});
+
+    }
+
+    // 특정 덱 다시 뽑기
+  function redraw(deckId, siteId) {
+  const site = sites.find(s => s.id === siteId);
+  const block = document.querySelector(`#${deckId} .cards`);
+  block.innerHTML = drawCards(site);
+}
+    
+    function toggleMeaning(id) {
+  const el = document.getElementById(id);
+  el.style.display = (el.style.display === "none") ? "block" : "none";
+}
+
+  </script>
+</body>
+</html>
+
+
