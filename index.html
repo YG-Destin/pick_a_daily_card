@@ -265,7 +265,8 @@
   { id: "JiNi_Belline", name: "JiNi Belline", folder: "https://yg-destin.github.io/cartomancy/other/JiNi_Belline/cards", total: 53, startFrom: 0, count: 3, exts: ["JPG"] },
   { id: "JiNi_Tarot", name: "JiNi Tarot", folder: "https://yg-destin.github.io/cartomancy/tarot/JiNi_Tarot/cards", total: 78, startFrom: 0, count: 6, exts: ["jpeg"] },
   { id: "ori_kip", name: "Original Kipper", folder: "https://yg-destin.github.io/cartomancy/other/ori_kip/cards", total: 36, startFrom: 1, count: 3, exts: ["png"] },
-  { id: "Baby_god", name: "동자신점", folder: "https://yg-destin.github.io/cartomancy/other/Baby_god/cards", total: 31, startFrom: 1, count: 3,   items: [
+  { id: "Baby_god", name: "동자신점", folder: "https://yg-destin.github.io/cartomancy/other/Baby_god/cards", total: 31, 
+  startFrom: 1, count: 3, exts: ["jpg"], items: [
     { file: "01.jpg", meaning: "잔 두 개 : 긍정 / 마음이 통함, 축배를 들다, 마음에 듦" },
     { file: "02.jpg", meaning: "빠른 운석 : 긍정 or 중립 / 쾌속 진행, 상승세, 바쁨, 분주함" },
     { file: "03.jpg", meaning: "남자 성기 : 부정 or 중립 / (필요 이상으로) 흥분한, 불륜, 잠자리만 원함, (성별로서의) 남자" },
@@ -660,15 +661,59 @@ else if (site.id === "drink_oracle") {
   }
 
   return picked.map((c, index) => {
-    let cardId = `drink-meaning-${index}-${Date.now()}`; // 고유 ID
+    let cardId = `drink-meaning-${index}-${Date.now()}`;
     return `
       <div style="display:inline-block; margin:5px; cursor:pointer; text-align:center;"
            onclick="toggleMeaning('${cardId}')">
-        <img src="cards/${c.file}" 
+        <img src="${site.folder}/${c.file}" 
              style="width:90px; height:auto; border-radius:8px; box-shadow:0 0 5px rgba(0,0,0,0.3);">
         <div id="${cardId}" style="display:none; margin-top:5px; font-size:0.7em;">
           <div>${c.meaning}</div>
           <div>${c.advice}</div>
+        </div>
+      </div>
+    `;
+  }).join("");
+}
+
+else if (site.id === "Baby_god") {
+  let picked = [];
+  while (picked.length < site.count) {
+    let choice = site.items[Math.floor(Math.random() * site.items.length)];
+    if (!picked.includes(choice)) picked.push(choice);
+  }
+
+  return picked.map((c, index) => {
+    let cardId = `baby-meaning-${index}-${Date.now()}`;
+    return `
+      <div style="display:inline-block; margin:5px; cursor:pointer; text-align:center;"
+           onclick="toggleMeaning('${cardId}')">
+        <img src="${site.folder}/${c.file}" 
+             style="width:90px; height:auto; border-radius:8px; box-shadow:0 0 5px rgba(0,0,0,0.3);">
+        <div id="${cardId}" style="display:none; margin-top:5px; font-size:0.7em;">
+          <div>${c.meaning}</div>
+        </div>
+      </div>
+    `;
+  }).join("");
+}
+  
+else if (site.id === "Baby_god") {
+  let picked = [];
+  while (picked.length < site.count) {
+    let choice = site.items[Math.floor(Math.random() * site.items.length)];
+    if (!picked.includes(choice)) picked.push(choice);
+  }
+
+  return picked.map((c, index) => {
+    let cardId = `baby-meaning-${index}-${Date.now()}`;
+    return `
+      <div style="display:inline-block; margin:5px; cursor:pointer; text-align:center;"
+           onclick="toggleMeaning('${cardId}')">
+        <img src="${site.folder}/${c.file}" 
+             style="width:90px; height:auto; border-radius:8px; box-shadow:0 0 5px rgba(0,0,0,0.3);">
+        <div id="${cardId}" style="display:none; margin-top:5px; font-size:0.7em;">
+          <div>${c.meaning}</div>
         </div>
       </div>
     `;
@@ -781,12 +826,13 @@ function showObang(id, idx) {
 © 2025 Studio Y.Green. All Rights Reserved.<br>
 본 페이지의 HTML, CSS, JavaScript 코드 및 오라클 콘텐츠는 Studio Y.Green의 창작물로 저작권법의 보호를 받습니다.<br>
 페이지에 사용된 이미지 및 일러스트의 저작권은 각 원저작자에게 있습니다.<br>
-무단 복제, 배포, 코드 변형 및 상업적 이용을 금합니다.
+무단 복제, 배포, 코드 변형 및 상업적 이용을 금합니다.<br>
 <small style="color:#888;">✨️ 제작 : 연유🌱</small>
 </footer>
 
 </body>
 </html>
+
 
 
 
