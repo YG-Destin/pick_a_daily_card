@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>데일리라도 뽑아봅시다⭐</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Jini's Personal pick cards</title>
   <style>
     body {
       font-family: system-ui, sans-serif;
@@ -11,190 +11,40 @@
       margin: 0;
       padding: 0;
     }
-    h1 {
-      margin: 15px 0;
-      font-size: 1.8rem;
-    }
-    h2 {
-      margin-top: 20px;
-      font-size: 1.4rem;
-    }
-    /* 기본: 여러 장일 때 */
-    .cards {
-      display: flex;
-      justify-content: center;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-top: 10px;
-    }
-    /* 6장 타로 전용 → 3x2 그리드 */
-    .cards.six-tarot {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 3px;
-      justify-items: center;
-      padding: 0 3px;
-    }
-    /* 그랑 에띨라 전용: 항상 3장 가로 */
-    .cards.Lismon_G_E {
-      display: grid !important;
-      grid-template-columns: repeat(3, auto);
-      justify-content: center;
-      gap: 8px;
-    }
-    /* 1~2장짜리 덱 전용 */
-    .cards.few-cards {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-    /* 카드 이미지 기본값 */
-    .cards img {
-      width: 100%;
-      height: auto;
-      max-width: 300px;
-      object-fit: contain;
-      background: white;
-      border: 1px solid #ccc;
-      border-radius: 6px;
-    }
-    .cards.blt img,
-    .cards.rmtt img {
-      aspect-ratio: 7 / 12;
-      object-fit: contain;
-      background: white;
-      border: 1px solid #ccc;
-      border-radius: 6px;
-    }
-    .cards.Lismon_G_E img {
-      width: 110px;
-      height: 165px;
-      object-fit: cover;
-      background: white;
-      border: 1px solid #ccc;
-      display: block;
-    }
-    .cards.Lismon_G_E .rotated {
-      transform: rotate(180deg);
-    }
-    .cards.six-tarot { min-height: 360px; }
-    .cards:not(.six-tarot) { min-height: 180px; }
-    .three-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 10px;
-      justify-items: center;
-      margin-top: 10px;
-    }
-    .astro-card {
-      border: 1px solid #ccc;
-      border-radius: 6px;
-      padding: 10px;
-      font-size: 1.5em;
-      text-align: center;
-      background: #fff;
-    }
-    .rune-card {
-      display: inline-block;
-      margin: 10px;
-      padding: 8px;
-      border: 1px solid #ccc;
-      border-radius: 6px;
-      text-align: center;
-    }
-    @media (max-width: 768px) {
-      .cards {
-        grid-template-columns: repeat(3, 1fr);
-      }
-      .cards img {
-        max-width: none;
-      }
-    }
-    .input-row {
-      margin: 15px 0;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 10px;
-      flex-wrap: wrap;
-      padding: 0 10px;
-    }
-    .question-input {
-      padding: 8px;
-      width: 100%;
-      max-width: 280px;
-      border: 1px solid #ccc;
-      border-radius: 6px;
-    }
-    button {
-      padding: 6px 12px;
-      border: none;
-      border-radius: 6px;
-      background-color: #4CAF50;
-      color: white;
-      font-size: 14px;
-      cursor: pointer;
-      white-space: nowrap;
-    }
-    button:hover {
-      background-color: #45a049;
-    }
-    .options {
-      margin: 20px auto;
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-      gap: 10px 20px;
-      max-width: 100%;
-      padding: 0 10px;
-      text-align: left;
-    }
-    .deck-block {
-      margin-bottom: 40px;
-      padding: 0 10px;
-    }
-    .iching-symbols {
-      font-size: 1.8em;
-      line-height: 0.6;
-      margin-top: 0;
-    }
-    .rune-row {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 10px;
-      justify-items: center;
-      margin-top: 10px;
-    }
-    @media (max-width: 480px) {
-      button {
-        font-size: 13px;
-        padding: 5px 10px;
-      }
-    }
+    h1 { margin: 15px 0; font-size: 1.8rem; }
+    h2 { margin-top: 20px; font-size: 1.4rem; }
+    .cards { display: flex; justify-content: center; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+    .cards img { width: 100px; height: auto; border: 1px solid #ccc; border-radius: 6px; background: white; }
+    .options { margin: 20px auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 10px 20px; max-width: 100%; padding: 0 10px; text-align: left; }
+    .input-row { margin: 15px 0; display: flex; justify-content: center; align-items: center; gap: 10px; flex-wrap: wrap; padding: 0 10px; }
+    .question-input { padding: 8px; width: 100%; max-width: 280px; border: 1px solid #ccc; border-radius: 6px; }
+    button { padding: 6px 12px; border: none; border-radius: 6px; background-color: #4CAF50; color: white; font-size: 14px; cursor: pointer; }
+    button:hover { background-color: #45a049; }
+    .deck-block { margin-bottom: 40px; padding: 0 10px; }
   </style>
 </head>
 
 <body>
   <h1>데일리라도 뽑아봅시다⭐</h1>
 
-  <!-- 질문 입력 -->
   <div class="input-row">
-    <input type="text" id="question" class="question-input" placeholder="질문을 입력하세요">
+    <input type="text" id="question" class="question-input" placeholder="무엇을 알아볼까" />
   </div>
 
-  <!-- 덱 선택 체크박스 -->
   <div class="options" id="options"></div>
 
-  <!-- 확인 버튼 -->
   <div style="margin: 20px 0; text-align: center;">
     <button id="confirmButton">확인</button>
   </div>
 
-  <!-- 결과 -->
   <div id="results"></div>
 
   <script>
+    /* --------------------------
+    🔹 1. 사이트 데이터 (여기만 수정)
+    ---------------------------*/
     const sites = [
-  { id: "JiNi_Kipper", name: "JiNi Kipper", folder: "https://yg-destin.github.io/cartomancy/other/JiNi_Kipper/cards", total: 36, startFrom: 1, count: 3, exts: ["jpg"] },
+     { id: "JiNi_Kipper", name: "JiNi Kipper", folder: "https://yg-destin.github.io/cartomancy/other/JiNi_Kipper/cards", total: 36, startFrom: 1, count: 3, exts: ["jpg"] },
   { id: "drink_oracle", name: "Cafe Oracle", folder: "./cards", count: 3, 
   items: [
     { file: "01.jpg", meaning: "본질, 집중", advice: "핵심에 집중하라." },
@@ -235,7 +85,7 @@
   { id: "JiNi_Belline", name: "JiNi Belline", folder: "https://yg-destin.github.io/cartomancy/other/JiNi_Belline/cards", total: 53, startFrom: 0, count: 3, exts: ["JPG"] },
   { id: "JiNi_Tarot", name: "JiNi Tarot", folder: "https://yg-destin.github.io/cartomancy/tarot/JiNi_Tarot/cards", total: 78, startFrom: 0, count: 6, exts: ["jpeg"] },
   { id: "ori_kip", name: "Original Kipper", folder: "https://yg-destin.github.io/cartomancy/other/ori_kip/cards", total: 36, startFrom: 1, count: 3, exts: ["png"] },
-  { id: "Baby_god", name: "동자신점", folder: "https://yg-destin.github.io/cartomancy/other/Baby_god/cards", total: 31, 
+  { id: "Baby_god", name: "DongJa", folder: "https://yg-destin.github.io/cartomancy/other/Baby_god/cards", total: 31, 
   startFrom: 1, count: 3, exts: ["jpg"], items: [
     { file: "01.jpg", meaning: "잔 두 개 : 긍정<br>마음이 통함, 축배를 들다, 마음에 듦" },
     { file: "02.jpg", meaning: "빠른 운석 : 긍정 or 중립<br>쾌속 진행, 상승세, 바쁨, 분주함" },
@@ -394,7 +244,7 @@
   ] 
 },
 
-  { id: "yijing", name: "YiQing", mode: "iching", count: 2, items: [
+  { id: "yijing", name: "YiJing", mode: "iching", count: 2, items: [
       { number: 1, name: "중천건", keyword: "창조·시작·강함", symbols: ["⚊","⚊","⚊","⚊","⚊","⚊"] },
       { number: 2, name: "중지곤", keyword: "순응·수용·부드러움", symbols: ["⚋","⚋","⚋","⚋","⚋","⚋"] },
       { number: 3, name: "수뢰둔", keyword: "준비·지연·인내", symbols: ["⚋","⚊","⚋","⚋","⚋","⚊"] },
@@ -463,7 +313,7 @@
     },
   { id: "GAT", name: "Guardian Angel Tarot", folder: "https://yg-destin.github.io/cartomancy/other/GAT/cards", total: 78, startFrom: 0, count: 1, exts: ["png"] },
   { id: "rm_ag", name: "Romance Angel", folder: "https://yg-destin.github.io/cartomancy/other/rm_ag/cards", total: 44, startFrom: 1, count: 1, exts: ["png"] },  
-  { id: "lenormand", name: "JiNi Lenormand", mode: "lenormand", count: 2, 
+  { id: "lenormand", name: "Lenormand", mode: "lenormand", count: 2, 
   items: [
     { num:1, name:"Rider", img:"🐎", meaning:"소식, 움직임" },
     { num:2, name:"Clover", img:"🍀", meaning:"작은 행운, 짧음" },
@@ -505,7 +355,7 @@
  },
 
 { id: "hangul_oracle",
-  name: "한글 오라클",
+  name: "Hangeul Oracle",
   mode: "hangul",
   count: 3,
   items: {
@@ -590,127 +440,103 @@
   }
  ];
 
-    
-/* --------------------------
-1️⃣ drawCards : 최상단에 둬야 함
----------------------------*/
-function drawCards(site) {
-  // 기본 이미지 카드 + 카페 오라클
-  if (!site.mode || site.id === "drink_oracle") {
-    if (!site.exts) site.exts = ["jpg"];
-    if (!site.total) site.total = 78;
+    /* --------------------------
+    🔹 2. 카드 그리기 함수
+    ---------------------------*/
+    function drawCards(site) {
+      const exts = site.exts || ["jpg"];
+      const total = site.total || 36;
+      const count = site.count || 1;
+      const picked = [];
 
-    let picked = [];
-    while (picked.length < site.count) {
-      let num = Math.floor(Math.random() * site.total);
-      let ext = site.exts[Math.floor(Math.random() * site.exts.length)];
-      let n = String(num).padStart(2, "0") + "." + ext;
-      if (!picked.includes(n)) picked.push(n);
+      while (picked.length < count) {
+        const num = Math.floor(Math.random() * total);
+        const ext = exts[Math.floor(Math.random() * exts.length)];
+        const n = String(num).padStart(2, "0") + "." + ext;
+        if (!picked.includes(n)) picked.push(n);
+      }
+
+      return picked
+        .map(f => `<img src="${site.folder}/${f}" alt="Card">`)
+        .join("");
     }
 
-    return picked.map(f =>
-      `<img src="${site.folder}/${f}" alt="Card" style="width:100px;">`
-    ).join("");
-  }
-
-  // mode가 있는 다른 덱(예: hangul, rune 등)은 여기서 처리
-  return "";
-}
-
-
-
-/* --------------------------
-2️⃣ redraw / toggleMeaning / showObang
----------------------------*/
-function redraw(deckId, siteId) {
-  const site = sites.find(s => s.id === siteId);
-  const block = document.querySelector(`#${deckId} .cards`);
-  block.innerHTML = drawCards(site);
-}
-
-function toggleMeaning(id) {
-  const el = document.getElementById(id);
-  el.style.display = (el.style.display === "none") ? "block" : "none";
-}
-
-function showObang(id, idx) {
-  const div = document.getElementById(id);
-  if (div.dataset.shown === "true") return;
-  div.dataset.shown = "true";
-
-  const site = sites.find(s => s.mode === "obang");
-  const c = site.items[idx];
-  div.innerHTML = c.name;
-}
-
-/* --------------------------
-3️⃣ showSelected : drawCards 밑으로 이동
----------------------------*/
-function showSelected() {
-  const checked = document.querySelectorAll('input[type="checkbox"]:checked');
-  const results = document.getElementById("results");
-  results.innerHTML = "";
-
-  const question = document.getElementById("question").value;
-  if (question) {
-    results.innerHTML = `<h2>질문: ${question}</h2>`;
-  }
-
-  checked.forEach(item => {
-    const site = sites.find(s => s.id === item.value);
-    if (site) {
-      const deckId = "deck-" + site.id;
-      const countInput = document.getElementById(`count-${site.id}`);
-      const customCount = parseInt(countInput?.value) || site.count;
-      site.count = customCount;
-
-      results.innerHTML += `
-        <div class="deck-block" id="${deckId}">
-          <h2 style="font-size:1rem;">${site.name} (${customCount}장)</h2>
-          <div class="cards ${site.id}">
-            ${drawCards(site)}
-          </div>
-          <button onclick='redraw("${deckId}", "${site.id}")'>다시 뽑기</button>
-        </div>`;
+    /* --------------------------
+    🔹 3. 덱 다시 뽑기
+    ---------------------------*/
+    function redraw(deckId, siteId) {
+      const site = sites.find(s => s.id === siteId);
+      const block = document.querySelector(`#${deckId} .cards`);
+      block.innerHTML = drawCards(site);
     }
-  });
-}
 
-/* --------------------------
-4️⃣ 기타 보조 함수 및 로드 이벤트
----------------------------*/
-function toggleCountSelect(siteId) {
-  const checkbox = document.getElementById(`check-${siteId}`);
-  const select = document.getElementById(`count-${siteId}`);
-  select.style.display = checkbox.checked ? "inline-block" : "none";
-}
+    /* --------------------------
+    🔹 4. 선택 결과 표시
+    ---------------------------*/
+    function showSelected() {
+      const checked = document.querySelectorAll('input[type="checkbox"]:checked');
+      const results = document.getElementById("results");
+      results.innerHTML = "";
 
-window.addEventListener("DOMContentLoaded", () => {
-    const optionsDiv = document.getElementById("options");
-    sites.forEach(site => {
-      const label = document.createElement("div");
-      label.innerHTML = `
-        <input type="checkbox" value="${site.id}">
-        <span>${site.name}</span>
-      `;
-      optionsDiv.appendChild(label);
+      const question = document.getElementById("question").value;
+      if (question) {
+        results.innerHTML = `<h2>질문: ${question}</h2>`;
+      }
+
+      checked.forEach(item => {
+        const site = sites.find(s => s.id === item.value);
+        if (site) {
+          const deckId = "deck-" + site.id;
+          const countInput = document.getElementById(`count-${site.id}`);
+          const customCount = parseInt(countInput?.value) || site.count || 1;
+          site.count = customCount;
+
+          results.innerHTML += `
+            <div class="deck-block" id="${deckId}">
+              <h2 style="font-size:1rem;">${site.name} (${customCount}장)</h2>
+              <div class="cards ${site.id}">
+                ${drawCards(site)}
+              </div>
+              <button onclick='redraw("${deckId}", "${site.id}")'>다시 뽑기</button>
+            </div>`;
+        }
+      });
+    }
+
+    /* --------------------------
+    🔹 5. 체크박스/셀렉트 자동 생성
+    ---------------------------*/
+    function toggleCountSelect(siteId) {
+      const checkbox = document.getElementById(`check-${siteId}`);
+      const select = document.getElementById(`count-${siteId}`);
+      select.style.display = checkbox.checked ? "inline-block" : "none";
+    }
+
+    window.addEventListener("DOMContentLoaded", () => {
+      const optionsDiv = document.getElementById("options");
+      sites.forEach(site => {
+        const label = document.createElement("div");
+        label.innerHTML = `
+          <input type="checkbox" id="check-${site.id}" value="${site.id}" onchange="toggleCountSelect('${site.id}')">
+          <span>${site.name}</span>
+          <select id="count-${site.id}" style="display:none; font-size:0.9rem; padding:2px 4px; border-radius:4px;">
+            ${[1, 2, 3, 4, 6, 9, 36].map(n => `<option value="${n}">${n}장</option>`).join("")}
+          </select>
+        `;
+        optionsDiv.appendChild(label);
+      });
+
+      document.getElementById("confirmButton").addEventListener("click", showSelected);
     });
+  </script>
 
-    document.getElementById("confirmButton").addEventListener("click", showSelected);
-  });
-</script>
-
-
-<footer style="font-size:0.9rem; color:#555; text-align:center; margin-top:40px; line-height:1.6;">
-© 2025 Studio Y.Green. All Rights Reserved.<br>
-본 페이지의 HTML, CSS, JavaScript 코드 및 오라클 콘텐츠는 Studio Y.Green의 창작물로 저작권법의 보호를 받습니다.<br>
-페이지에 사용된 이미지 및 일러스트의 저작권은 각 원저작자에게 있습니다.<br>
-무단 복제, 배포, 코드 변형 및 상업적 이용을 금합니다.<br>
-<small style="color:#888;">✨️ 제작 : 연유🌱</small>
-</footer>
-  
+  <footer style="font-size:0.9rem; color:#555; text-align:center; margin-top:40px; line-height:1.6;">
+    © 2025 Studio Y.Green. All Rights Reserved.<br>
+    본 페이지의 HTML, CSS, JavaScript 코드 및 오라클 콘텐츠는 Studio Y.Green의 창작물로 저작권법의 보호를 받습니다.<br>
+    페이지에 사용된 이미지 및 일러스트의 저작권은 각 원저작자에게 있습니다.<br>
+    무단 복제, 배포, 코드 변형 및 상업적 이용을 금합니다.<br>
+    <small style="color:#888;">✨️ 제작 : 연유🌱</small>
+  </footer>
 </body>
 </html>
-
-
 
