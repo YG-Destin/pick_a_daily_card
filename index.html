@@ -19,120 +19,97 @@
       margin-top: 20px;
       font-size: 1.4rem;
     }
-/* 기본: 여러 장일 때 */
-.cards {
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin-top: 10px;
-}
-
-/* 6장 타로 전용 → 3x2 그리드 */
-.cards.six-tarot {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 3px;
-  justify-items: center;
-  padding: 0 3px;
-}
-/* 그랑 에띨라 전용: 항상 3장 가로 */
-.cards.Lismon_G_E {
-  display: grid !important;
-  grid-template-columns: repeat(3, auto);
-  justify-content: center;
-  gap: 8px;
-}
-/* 1~2장짜리 덱 전용 */
-.cards.few-cards {
-  display: flex;
-  justify-content: center; /* 가로 중앙 */
-  align-items: center;     /* 세로 중앙 */
-}
-
-/* 카드 이미지 기본값 (모든 덱 공통) */
-.cards img {
-  width: 100%;       /* 칸을 꽉 채움 */
-  height: auto;      /* 세로 비율 유지 */
-  max-width: 300px;  /* 너무 커지지 않게 제한 */
-  object-fit: contain; /* 그림 전체 보이게 */
-  background: white;   /* 흰 배경 */
-  border: 1px solid #ccc; /* 옅은 회색 테두리 */
-  border-radius: 6px;     /* 모서리 살짝 둥글림 */
-}
-/* 보더리스 & 로맨틱 전용 */
-.cards.blt img,
-.cards.rmtt img {
-  width: 100%;
-  aspect-ratio: 7 / 12;   /* 7:12 비율 강제 */
-  object-fit: contain;    /* 이미지 전체 다 보이게 */
-  max-width: 300px;
-  background: white;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-}
-/* 그랑 에띨라 전용 카드 */
-.cards.Lismon_G_E img {
-  width: 110px;
-  height: 165px;
-  object-fit: cover;
-  background: white;
-  border: 1px solid #ccc;
-  display: block;          /* inline-block 높이 차이 방지 */
-}
-
-/* 회전은 이미지를 감싼 div가 아니라 img에 직접 적용 */
-.cards.Lismon_G_E .rotated {
-  transform: rotate(180deg);
-}
-
-/* 6장 타로 전용 */
-.cards.six-tarot {
-  min-height: 360px; /* 카드 틀이 덜 흔들리게 최소 높이 */
-}
-
-/* 3장 카드 전용 */
-.cards:not(.six-tarot) {
-  min-height: 180px;
-}
-    
- /* 공통 3열 레이아웃 */
-.three-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 10px;
-  justify-items: center;
-  margin-top: 10px;
-}
-
-/* 점성술 카드 전용 */
-.astro-card {
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  padding: 10px;
-  font-size: 1.5em;
-  text-align: center;
-  background: #fff;
-}   
-    
+    /* 기본: 여러 장일 때 */
+    .cards {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 10px;
+    }
+    /* 6장 타로 전용 → 3x2 그리드 */
+    .cards.six-tarot {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 3px;
+      justify-items: center;
+      padding: 0 3px;
+    }
+    /* 그랑 에띨라 전용: 항상 3장 가로 */
+    .cards.Lismon_G_E {
+      display: grid !important;
+      grid-template-columns: repeat(3, auto);
+      justify-content: center;
+      gap: 8px;
+    }
+    /* 1~2장짜리 덱 전용 */
+    .cards.few-cards {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    /* 카드 이미지 기본값 */
+    .cards img {
+      width: 100%;
+      height: auto;
+      max-width: 300px;
+      object-fit: contain;
+      background: white;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+    .cards.blt img,
+    .cards.rmtt img {
+      aspect-ratio: 7 / 12;
+      object-fit: contain;
+      background: white;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+    .cards.Lismon_G_E img {
+      width: 110px;
+      height: 165px;
+      object-fit: cover;
+      background: white;
+      border: 1px solid #ccc;
+      display: block;
+    }
+    .cards.Lismon_G_E .rotated {
+      transform: rotate(180deg);
+    }
+    .cards.six-tarot { min-height: 360px; }
+    .cards:not(.six-tarot) { min-height: 180px; }
+    .three-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      justify-items: center;
+      margin-top: 10px;
+    }
+    .astro-card {
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      padding: 10px;
+      font-size: 1.5em;
+      text-align: center;
+      background: #fff;
+    }
     .rune-card {
-  display: inline-block;
-  margin: 10px;
-  padding: 8px;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  text-align: center; /* 중앙 정렬 */
-}
-    
-/* 모바일 대응 (세로 화면에서 카드가 너무 작아지지 않게) */
-@media (max-width: 768px) {
-  .cards {
-    grid-template-columns: repeat(3, 1fr); /* 작은 화면도 항상 3장 */
-  }
-  .cards img {
-    max-width: none; /* 모바일에선 크기 제한 해제 */
-  }
-}
+      display: inline-block;
+      margin: 10px;
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      text-align: center;
+    }
+    @media (max-width: 768px) {
+      .cards {
+        grid-template-columns: repeat(3, 1fr);
+      }
+      .cards img {
+        max-width: none;
+      }
+    }
     .input-row {
       margin: 15px 0;
       display: flex;
@@ -162,8 +139,6 @@
     button:hover {
       background-color: #45a049;
     }
-
-    /* 체크박스 옵션 영역 */
     .options {
       margin: 20px auto;
       display: grid;
@@ -173,28 +148,22 @@
       padding: 0 10px;
       text-align: left;
     }
-    .options label {
-      white-space: nowrap;
-    }
-
     .deck-block {
       margin-bottom: 40px;
       padding: 0 10px;
     }
-
- .iching-symbols {
-  font-size: 1.8em;
-  line-height: 0.6; /* 세로 간격 줄임 */
-  margin-top: 0px; /* 위쪽 여백 축소 */
-}
+    .iching-symbols {
+      font-size: 1.8em;
+      line-height: 0.6;
+      margin-top: 0;
+    }
     .rune-row {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr); /* 항상 3개 */
-  gap: 10px;
-  justify-items: center;
-  margin-top: 10px;
-}
-    /* 모바일 화면에서 버튼 크기 조정 */
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      justify-items: center;
+      margin-top: 10px;
+    }
     @media (max-width: 480px) {
       button {
         font-size: 13px;
@@ -203,22 +172,23 @@
     }
   </style>
 </head>
+
 <body>
   <h1>데일리라도 뽑아봅시다⭐</h1>
 
-<!-- 질문 입력 -->
-<div class="input-row">
-  <input type="text" id="question" class="question-input" placeholder="질문을 입력하세요" />
-</div>
-  
-<!-- 덱 선택 체크박스 -->
-<div class="options" id="options"></div>
+  <!-- 질문 입력 -->
+  <div class="input-row">
+    <input type="text" id="question" class="question-input" placeholder="질문을 입력하세요" />
+  </div>
 
-<!-- 확인 버튼: 체크박스 밑 중앙 -->
-<div style="margin: 20px 0; text-align: center;">
-  <button onclick="showSelected()">확인</button>
-</div>
-  
+  <!-- 덱 선택 체크박스 -->
+  <div class="options" id="options"></div>
+
+  <!-- 확인 버튼 -->
+  <div style="margin: 20px 0; text-align: center;">
+    <button id="confirmButton">확인</button>
+  </div>
+
   <!-- 결과 -->
   <div id="results"></div>
 
@@ -625,65 +595,29 @@ const optionsDiv = document.getElementById("options");
 sites.forEach(site => {
   const label = document.createElement("div");
   label.style.display = "flex";
-  label.style.flexDirection = "column";
-  label.style.alignItems = "flex-start";
-  label.style.gap = "4px";
-  label.style.fontSize = "0.85rem"; // 🔸 덱 이름 작게
-  label.style.marginBottom = "10px";
-  label.style.padding = "4px 6px";
-  label.style.border = "1px solid #eee";
-  label.style.borderRadius = "6px";
-  label.style.background = "#fafafa";
+  label.style.alignItems = "center";
+  label.style.gap = "6px";
+  label.style.marginBottom = "6px";
+  label.style.fontSize = "0.9rem";
 
+  // 체크박스 + 덱 이름 + 장수 선택 select
   label.innerHTML = `
-    <label style="display:flex; align-items:center; gap:5px;">
-      <input type="checkbox" id="check-${site.id}" value="${site.id}" onchange="toggleCountButtons('${site.id}', ${site.count})">
-      <span>${site.name}</span>
-    </label>
-    <div id="count-wrap-${site.id}" style="display:none; gap:6px; flex-wrap:wrap; margin-left:24px; margin-top:4px;">
-      ${[1, 2, 3, 4, 6, 9, 36].map(n => `
-        <button type="button" class="count-btn" data-value="${n}" onclick="setCount('${site.id}', ${n})"
-          style="padding:2px 8px; font-size:0.8rem; border:1px solid #ccc; border-radius:4px; background:white;">
-          ${n}장
-        </button>`).join("")}
-    </div>
+    <input type="checkbox" id="check-${site.id}" value="${site.id}" onchange="toggleCountSelect('${site.id}')">
+    <span>${site.name}</span>
+    <select id="count-${site.id}" style="display:none; font-size:0.9rem; padding:2px 4px; border-radius:4px;">
+      ${[1, 2, 3, 4, 6, 9, 36].map(n => `<option value="${n}">${n}장</option>`).join("")}
+    </select>
   `;
+
   optionsDiv.appendChild(label);
 });
 
-function toggleCountButtons(siteId, defaultCount) {
+// 체크하면 select 보이기 / 해제 시 숨기기
+function toggleCountSelect(siteId) {
   const checkbox = document.getElementById(`check-${siteId}`);
-  const wrap = document.getElementById(`count-wrap-${siteId}`);
-  wrap.style.display = checkbox.checked ? "flex" : "none";
-
-  // 체크 해제 시 선택 초기화
-  if (!checkbox.checked) {
-    const buttons = wrap.querySelectorAll(".count-btn");
-    buttons.forEach(b => b.style.background = "white");
-  }
+  const select = document.getElementById(`count-${siteId}`);
+  select.style.display = checkbox.checked ? "inline-block" : "none";
 }
-
-function setCount(siteId, value) {
-  // 선택한 버튼만 강조
-  const buttons = document.querySelectorAll(`#count-wrap-${siteId} .count-btn`);
-  buttons.forEach(b => {
-    b.style.background = (parseInt(b.dataset.value) === value) ? "#4CAF50" : "white";
-    b.style.color = (parseInt(b.dataset.value) === value) ? "white" : "black";
-  });
-
-  // hidden input으로 값 저장 (showSelected에서 읽음)
-  let input = document.getElementById(`count-${siteId}`);
-  if (!input) {
-    input = document.createElement("input");
-    input.type = "hidden";
-    input.id = `count-${siteId}`;
-    document.body.appendChild(input);
-  }
-  input.value = value;
-}
-
-
-
 
    function drawCards(site) {
   // 1) 에띨라 같은 정역 카드
@@ -1081,43 +1015,42 @@ else {
 }
 
 
-    // 확인 버튼 눌렀을 때
-      function showSelected() {
-      const checked = document.querySelectorAll('input[type="checkbox"]:checked');
-      const results = document.getElementById("results");
-      results.innerHTML = "";
+// 확인 버튼 눌렀을 때
+function showSelected() {
+  const checked = document.querySelectorAll('input[type="checkbox"]:checked');
+  const results = document.getElementById("results");
+  results.innerHTML = "";
 
-      // 질문 표시
-      const question = document.getElementById("question").value;
-      if (question) {
-        results.innerHTML = `<h2>질문: ${question}</h2>`;
-      }
-
-    // 선택된 덱 카드 표시
-checked.forEach(item => {
-  const site = sites.find(s => s.id === item.value);
-  if (site) {
-    const deckId = "deck-" + site.id;
-
-    // 버튼으로 선택한 장수 읽기
-    const countInput = document.getElementById(`count-${site.id}`);
-    const customCount = parseInt(countInput?.value) || site.count;
-    site.count = customCount;
-
-    results.innerHTML += `
-      <div class="deck-block" id="${deckId}">
-        <h2 style="font-size:1rem;">${site.name} (${customCount}장)</h2>
-        <div class="cards ${site.id}">
-          ${drawCards(site)}
-        </div>
-        <button onclick='redraw("${deckId}", "${site.id}")'>다시 뽑기</button>
-      </div>`;
+  // 질문 표시
+  const question = document.getElementById("question").value;
+  if (question) {
+    results.innerHTML = `<h2>질문: ${question}</h2>`;
   }
-});
 
+  // 선택된 덱 카드 표시
+  checked.forEach(item => {
+    const site = sites.find(s => s.id === item.value);
+    if (site) {
+      const deckId = "deck-" + site.id;
 
+      // 버튼으로 선택한 장수 읽기
+      const countInput = document.getElementById(`count-${site.id}`);
+      const customCount = parseInt(countInput?.value) || site.count;
+      site.count = customCount;
+
+      results.innerHTML += `
+        <div class="deck-block" id="${deckId}">
+          <h2 style="font-size:1rem;">${site.name} (${customCount}장)</h2>
+          <div class="cards ${site.id}">
+            ${drawCards(site)}
+          </div>
+          <button onclick='redraw("${deckId}", "${site.id}")'>다시 뽑기</button>
+        </div>`;
     }
+  });
+}
 
+// 오방색 카드 클릭 시 의미 표시
 function showObang(id, idx) {
   const div = document.getElementById(id);
   if (div.dataset.shown === "true") return;
@@ -1132,7 +1065,7 @@ function showObang(id, idx) {
 
   let listText = "";
   for (let i = 0; i < words.length; i += 2) {
-    listText += words.slice(i, i+2).join(' · ') + "<br>";
+    listText += words.slice(i, i + 2).join(' · ') + "<br>";
   }
 
   div.innerHTML = `
@@ -1143,19 +1076,20 @@ function showObang(id, idx) {
   `;
 }
 
-    // 특정 덱 다시 뽑기
-  function redraw(deckId, siteId) {
+// 특정 덱 다시 뽑기
+function redraw(deckId, siteId) {
   const site = sites.find(s => s.id === siteId);
   const block = document.querySelector(`#${deckId} .cards`);
   block.innerHTML = drawCards(site);
 }
-    
-    function toggleMeaning(id) {
+
+// 카드 의미 토글 (한글오라클, 룬 등)
+function toggleMeaning(id) {
   const el = document.getElementById(id);
   el.style.display = (el.style.display === "none") ? "block" : "none";
- }
 }
-  </script>
+</script>
+
 
 <footer style="font-size:0.9rem; color:#555; text-align:center; margin-top:40px; line-height:1.6;">
 © 2025 Studio Y.Green. All Rights Reserved.<br>
@@ -1167,6 +1101,7 @@ function showObang(id, idx) {
   
 </body>
 </html>
+
 
 
 
