@@ -805,7 +805,7 @@ else if (site.mode === "iching") {
 }
 
     // 7) 한글 오라클
-   else if (site.mode === "hangul") {
+else if (site.mode === "hangul") {
   const { initials, vowels, finals } = site.items;
 
   const pick = (obj) => {
@@ -822,37 +822,56 @@ else if (site.mode === "iching") {
     { type: "종성", ...pick(finals) }
   ];
 
-  let html = "";
-  picks.forEach(card => {
+  let html = `
+    <div style="
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      flex-wrap: nowrap;
+      gap: 12px;
+      overflow-x: auto;
+      padding: 10px;
+    ">
+  `;
+
+  picks.forEach((card, index) => {
+    const id = `hangul-meaning-${index}-${Date.now()}`;
     html += `
       <div style="
-        display:inline-block;
-        text-align:center;
-        margin:10px;
-      ">
+        flex: 0 0 100px;
+        text-align: center;
+        margin: 5px;
+        cursor: pointer;
+      " onclick="toggleMeaning('${id}')">
+
         <div style="
-          border:1px solid #ccc;
-          border-radius:10px;
-          padding:10px;
-          width:100px;
-          background:#fff;
-          box-shadow:0 0 4px rgba(0,0,0,0.15);
-          font-size:2.2em;
-          font-weight:bold;
-          margin-bottom:6px;
+          border: 1px solid #ccc;
+          border-radius: 10px;
+          padding: 10px;
+          background: #fff;
+          box-shadow: 0 0 4px rgba(0,0,0,0.15);
+          font-size: 2.2em;
+          font-weight: bold;
+          margin-bottom: 6px;
         ">${card.letter}</div>
-        <div style="font-size:0.9em; font-weight:bold; line-height:1.4;">
-          ${card.keyword}
-        </div>
-        <div style="font-size:0.8em; line-height:1.4; margin-top:2px;">
-          ${card.advice}
+
+        <div id="${id}" style="display:none;">
+          <div style="font-size:0.9em; font-weight:bold; line-height:1.4;">
+            ${card.keyword}
+          </div>
+          <div style="font-size:0.8em; line-height:1.4; margin-top:2px;">
+            ${card.advice}
+          </div>
         </div>
       </div>
     `;
   });
 
-  return `<div style="display:flex; justify-content:center; flex-wrap:wrap;">${html}</div>`;
+  html += `</div>`;
+  return html;
 }
+
+
 
 
 
@@ -1036,5 +1055,6 @@ function showObang(id, idx) {
 
 </body>
 </html>
+
 
 
