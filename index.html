@@ -675,8 +675,18 @@ function toggleCountSelect(siteId) {
 }
 
 window.addEventListener("DOMContentLoaded", () => {
-  document.getElementById("confirmButton").addEventListener("click", showSelected);
-});
+    const optionsDiv = document.getElementById("options");
+    sites.forEach(site => {
+      const label = document.createElement("div");
+      label.innerHTML = `
+        <input type="checkbox" value="${site.id}">
+        <span>${site.name}</span>
+      `;
+      optionsDiv.appendChild(label);
+    });
+
+    document.getElementById("confirmButton").addEventListener("click", showSelected);
+  });
 </script>
 
 
@@ -690,6 +700,7 @@ window.addEventListener("DOMContentLoaded", () => {
   
 </body>
 </html>
+
 
 
 
