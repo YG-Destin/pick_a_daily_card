@@ -595,8 +595,8 @@
 1️⃣ drawCards : 최상단에 둬야 함
 ---------------------------*/
 function drawCards(site) {
-  // 6) 기본 이미지 카드 (mode가 지정되지 않은 일반 덱만 처리)
-  if (!site.mode) {
+  // 기본 이미지 카드 + 카페 오라클
+  if (!site.mode || site.id === "drink_oracle") {
     if (!site.exts) site.exts = ["jpg"];
     if (!site.total) site.total = 78;
 
@@ -613,9 +613,10 @@ function drawCards(site) {
     ).join("");
   }
 
-  // mode가 있는 덱들은 여기서 따로 처리
+  // mode가 있는 다른 덱(예: hangul, rune 등)은 여기서 처리
   return "";
 }
+
 
 
 /* --------------------------
@@ -710,5 +711,6 @@ window.addEventListener("DOMContentLoaded", () => {
   
 </body>
 </html>
+
 
 
