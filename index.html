@@ -595,18 +595,28 @@
 1️⃣ drawCards : 최상단에 둬야 함
 ---------------------------*/
 function drawCards(site) {
-  let picked = [];
-  while (picked.length < site.count) {
-    let num = Math.floor(Math.random() * site.total);
-    let ext = site.exts[Math.floor(Math.random() * site.exts.length)];
-    let n = String(num).padStart(2, "0") + "." + ext;
-    if (!picked.includes(n)) picked.push(n);
+  // 6) 기본 이미지 카드 (mode가 지정되지 않은 일반 덱만 처리)
+  if (!site.mode) {
+    if (!site.exts) site.exts = ["jpg"];
+    if (!site.total) site.total = 78;
+
+    let picked = [];
+    while (picked.length < site.count) {
+      let num = Math.floor(Math.random() * site.total);
+      let ext = site.exts[Math.floor(Math.random() * site.exts.length)];
+      let n = String(num).padStart(2, "0") + "." + ext;
+      if (!picked.includes(n)) picked.push(n);
+    }
+
+    return picked.map(f =>
+      `<img src="${site.folder}/${f}" alt="Card" style="width:100px;">`
+    ).join("");
   }
 
-  return picked.map(f => 
-    `<img src="${site.folder}/${f}" alt="Card" style="width:100px;">`
-  ).join("");
+  // mode가 있는 덱들은 여기서 따로 처리
+  return "";
 }
+
 
 /* --------------------------
 2️⃣ redraw / toggleMeaning / showObang
@@ -700,4 +710,5 @@ window.addEventListener("DOMContentLoaded", () => {
   
 </body>
 </html>
+
 
