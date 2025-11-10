@@ -621,12 +621,23 @@
 ];
     
     // 체크박스 자동 생성
-    const optionsDiv = document.getElementById("options");
-    sites.forEach(site => {
-      const label = document.createElement("label");
-      label.innerHTML = `<input type="checkbox" value="${site.id}"> ${site.name}`;
-      optionsDiv.appendChild(label);
-    });
+const optionsDiv = document.getElementById("options");
+sites.forEach(site => {
+  const label = document.createElement("label");
+  label.style.display = "flex";
+  label.style.alignItems = "center";
+  label.style.gap = "6px";
+  label.style.marginBottom = "4px";
+
+  label.innerHTML = `
+    <input type="checkbox" value="${site.id}"> 
+    ${site.name}
+    <input type="number" id="count-${site.id}" value="${site.count}" min="1" max="10" 
+           style="width:50px; text-align:center; border:1px solid #ccc; border-radius:4px;">
+  `;
+  optionsDiv.appendChild(label);
+});
+
 
    function drawCards(site) {
   // 1) 에띨라 같은 정역 카드
@@ -992,17 +1003,23 @@ checked.forEach(item => {
   const site = sites.find(s => s.id === item.value);
   if (site) {
     const deckId = "deck-" + site.id;
+
+    // 🔸 입력된 숫자 읽기 (기본값은 site.count)
+    const countInput = document.getElementById(`count-${site.id}`);
+    const customCount = parseInt(countInput?.value) || site.count;
+    site.count = customCount; // 이 덱만 임시 반영
+
     results.innerHTML += `
       <div class="deck-block" id="${deckId}">
-        <h2>${site.name}</h2>
-        <div class="cards ${site.count === 6 ? "six-tarot" : ""} ${site.id}">
-  ${drawCards(site)}
-</div>
-       
+        <h2>${site.name} (${customCount}장)</h2>
+        <div class="cards ${customCount === 6 ? "six-tarot" : ""} ${site.id}">
+          ${drawCards(site)}
+        </div>
         <button onclick='redraw("${deckId}", "${site.id}")'>다시 뽑기</button>
       </div>`;
   }
 });
+
 
     }
 
@@ -1055,6 +1072,7 @@ function showObang(id, idx) {
 
 </body>
 </html>
+
 
 
 
