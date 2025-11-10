@@ -590,6 +590,15 @@
  }
 ];
     
+<!-- 확인 버튼 -->
+<div style="margin: 20px 0; text-align: center;">
+  <button id="confirmButton">확인</button>
+</div>
+
+<!-- 결과 -->
+<div id="results"></div>
+
+<script>
 // 체크박스 자동 생성
 const optionsDiv = document.getElementById("options");
 sites.forEach(site => {
@@ -619,421 +628,21 @@ function toggleCountSelect(siteId) {
   select.style.display = checkbox.checked ? "inline-block" : "none";
 }
 
-   function drawCards(site) {
-  // 1) 에띨라 같은 정역 카드
-  if (site.mode === "reversible") {
-    let picked = [];
-    while (picked.length < site.count) {
-      let num = Math.floor(Math.random() * site.total);
-      let ext = site.exts[Math.floor(Math.random() * site.exts.length)];
-      let n = String(num).padStart(2, "0") + "." + ext;
-      let reversed = Math.random() < 0.5;
-      picked.push({ file: n, reversed });
-    }
-    return picked.map(card => `
-  <img src="${site.folder}/${card.file}" 
-       alt="Card" 
-       class="${card.reversed ? 'rotated' : ''}">
-`).join("");
-  }
- 
-    // 2) 점성술 카드 (하우스 + 별자리 + 행성)
-  else if (site.mode === "astro") {
-  let house  = site.groups.houses[Math.floor(Math.random() * site.groups.houses.length)];
-  let sign   = site.groups.signs[Math.floor(Math.random() * site.groups.signs.length)];
-  let planet = site.groups.planets[Math.floor(Math.random() * site.groups.planets.length)];
-  
-    
-  let items = [house, sign, planet];
-  let output = `<div class="three-grid">`;
-
-  items.forEach((item, index) => {
-    let symbol = item[0];
-    let meaning = item[1];
-    let astroId = `astro-meaning-${index}-${Date.now()}`; // 고유 ID
-
-    output += `      <div style="width:100px; border:1px solid #ccc; border-radius:6px;
-                  display:flex; flex-direction:column; align-items:center;
-                  justify-content:center; padding:5px; margin:5px; cursor:pointer;"
-           onclick="toggleMeaning('${astroId}')">
-        <div style="font-size:2em;">${symbol}</div>
-        <div id="${astroId}" style="display:none; margin-top:5px; font-size:0.9em; text-align:center;">
-          ${meaning}
-        </div>
-      </div>
-    `;
-  });
-
-  output += `</div>`;
-  return output;
-}
-    
- // 3) 룬 (정방향/역방향)
-else if (site.mode === "rune") {
-  let picked = [];
-  while (picked.length < site.count) {
-    let choice = site.items[Math.floor(Math.random() * site.items.length)];
-    if (!picked.includes(choice)) picked.push(choice);
-  }
-
-  let output = `<div class="three-grid">`;
-
-  picked.forEach((rune, index) => {
-    let reversed = Math.random() < 0.5;
-    let parts = rune[0].split(" "); 
-    let runeChar = parts[0];   // 룬 문자
-    let runeName = parts[1];   // 룬 이름
-    let meaningRaw = reversed ? rune[2] : rune[1]; 
-    let [pos, meaning] = meaningRaw.split(" - "); 
-    let runeId = `rune-meaning-${index}-${Date.now()}`;
-
-    output += `
-      <div style="width:100px; border:1px solid #ccc; border-radius:6px; 
-                  display:flex; flex-direction:column; align-items:center; 
-                  justify-content:center; padding:8px; margin:5px; cursor:pointer;"
-           onclick="toggleMeaning('${runeId}')">
-
-        <!-- 룬 문자 (정방향 or 역방향) -->
-        <div style="font-size:2.0em; ${reversed ? 'transform: rotate(180deg);' : ''}">
-          ${runeChar}
-        </div>
-        <!-- 룬 이름 -->
-        <div style="font-size:0.7em; margin-top:2px;">${runeName}</div>
-
-        <!-- 토글로 열리는 부분 -->
-        <div id="${runeId}" style="display:none; margin-top:4.5px; text-align:center;">
-          <div style="font-size:0.8em; color:#666;">${pos}</div>
-          <div style="font-size:1.0em; margin-top:2px;">${meaning}</div>
-        </div>
-      </div>
-    `;
-  });
-
-  output += `</div>`;
-  return output;
-}
-
-      
-// 4) 오방색 (사각형 색상칸)
-else if (site.mode === "obang") {
-  let picked = [];
-  while (picked.length < site.count) {
-    let choice = site.items[Math.floor(Math.random() * site.items.length)];
-    if (!picked.includes(choice)) picked.push(choice);
-  }
-
-  return picked.map((c, index) => {
-    const elemId = `obang-meaning-${index}-${Date.now()}`;
-    const idx = site.items.indexOf(c); // 해당 카드의 index 저장
-    return `
-      <div style="
-        display:inline-block;
-        width:100px;
-        min-height:50px;
-        margin:5px;
-        background-color:${c.code};
-        color:${c.text};
-        border-radius:8px;
-        font-weight:bold;
-        box-shadow:0 0 5px rgba(0,0,0,0.3);
-        cursor:pointer;
-        text-align:center;
-        padding:10px;"
-        onclick="showObang('${elemId}', ${idx})">
-
-        <div id="${elemId}" style="line-height:40px; font-size:1.2em;">
-          ${c.name}
-        </div>
-      </div>
-    `;
-  }).join("");
-}
-
-
-  // 5) 주역 (괘 세로 배열 + 키워드 클릭 토글)
-else if (site.mode === "iching") {
-  let picked = [];
-  while (picked.length < site.count) {
-    let choice = site.items[Math.floor(Math.random() * site.items.length)];
-    if (!picked.includes(choice)) picked.push(choice);
-  }
-
-  return picked.map((hex, index) => {
-    let keywordId = `iching-keyword-${index}-${Date.now()}`;
-    return `
-      <div style="margin:10px; padding:8px; border:1px solid #ccc; border-radius:6px;
-                  display:inline-block; text-align:center; cursor:pointer;"
-           onclick="toggleMeaning('${keywordId}')">
-        <div><b>${hex.number}. ${hex.name}</b></div>
-        <div class="iching-symbols">${hex.symbols.slice().reverse().join("<br>")}</div>
-        <div id="${keywordId}" style="display:none; margin-top:6px; font-size:0.8em;
-                    color:#333; border-top:1px solid #ddd; padding-top:4px;">
-          ${hex.keyword}
-        </div>
-      </div>
-    `;
-  }).join("");
-}
-
-  // 6) Lenormand
-  else if (site.mode === "lenormand") {
-  let picked = [];
-  while (picked.length < site.count) {
-    const card = site.items[Math.floor(Math.random() * site.items.length)];
-    if (!picked.includes(card)) picked.push(card);
-  }
-
-  return picked.map(card => `
-    <div style="display:inline-block; text-align:center; margin:8px; border:1px solid #ccc;
-                border-radius:8px; padding:10px; width:80px; cursor:pointer;"
-         onclick="this.querySelector('.leno-meaning').style.display =
-         (this.querySelector('.leno-meaning').style.display==='none')?'block':'none';">
-      <div style="font-size:2em;">${card.img}</div>
-      <div style="font-weight:bold; font-size:0.9em; margin-top:4px;">${card.name}</div>
-      <div class="leno-meaning" style="display:none; font-size:0.8em; margin-top:3px;">${card.meaning}</div>
-    </div>
-  `).join("");
-}
-
-    // 7) 한글 오라클
-else if (site.mode === "hangul") {
-  const { initials, vowels, finals } = site.items;
-
-  const pick = (obj) => {
-    const keys = Object.keys(obj);
-    const key = keys[Math.floor(Math.random() * keys.length)];
-    const text = obj[key];
-    const [keyword, advice] = text.split(" — ");
-    return { letter: key, keyword, advice };
-  };
-
-  const picks = [
-    { type: "초성", ...pick(initials) },
-    { type: "중성", ...pick(vowels) },
-    { type: "종성", ...pick(finals) }
-  ];
-
-  let html = `
-    <div style="
-      display: flex;
-      justify-content: center;
-      align-items: flex-start;
-      flex-wrap: nowrap;
-      gap: 12px;
-      overflow-x: auto;
-      padding: 10px;
-    ">
-  `;
-
-  picks.forEach((card, index) => {
-    const id = `hangul-meaning-${index}-${Date.now()}`;
-    html += `
-      <div style="
-        flex: 0 0 100px;
-        text-align: center;
-        margin: 5px;
-        cursor: pointer;
-      " onclick="toggleMeaning('${id}')">
-
-        <div style="
-          border: 1px solid #ccc;
-          border-radius: 10px;
-          padding: 10px;
-          background: #fff;
-          box-shadow: 0 0 4px rgba(0,0,0,0.15);
-          font-size: 2.2em;
-          font-weight: bold;
-          margin-bottom: 6px;
-        ">${card.letter}</div>
-
-        <div id="${id}" style="display:none;">
-          <div style="font-size:0.9em; font-weight:bold; line-height:1.4;">
-            ${card.keyword}
-          </div>
-          <div style="font-size:0.8em; line-height:1.4; margin-top:2px;">
-            ${card.advice}
-          </div>
-        </div>
-      </div>
-    `;
-  });
-
-  html += `</div>`;
-  return html;
-}
-
-
-
-
-
-// drawCards 함수 내부에 추가
-// JiNi Kipper가 36장일 때 전용 레이아웃
-if (site.id === "JiNi_Kipper" && site.count >= 36) {
-  return `<div style="
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 5px;
-    justify-items: center;
-  ">` + 
-    Array.from({length:36}, (_,i)=>`<img src="${site.folder}/${String(i+1).padStart(2,'0')}.jpg" alt="Card">`).join("")
-  + `</div>`;
-}
-
-else if (site.id === "drink_oracle") {
-  let picked = [];
-  while (picked.length < site.count) {
-    let choice = site.items[Math.floor(Math.random() * site.items.length)];
-    if (!picked.includes(choice)) picked.push(choice);
-  }
-
-  return picked.map((c, index) => {
-    let cardId = `drink-meaning-${index}-${Date.now()}`;
-    return `
-      <div style="display:inline-block; margin:5px; cursor:pointer; text-align:center;"
-           onclick="toggleMeaning('${cardId}')">
-        <img src="${site.folder}/${c.file}" 
-             style="width:90px; height:auto; border-radius:8px; box-shadow:0 0 5px rgba(0,0,0,0.3);">
-        <div id="${cardId}" style="display:none; margin-top:5px; font-size:0.7em;">
-          <div>${c.meaning}</div>
-          <div>${c.advice}</div>
-        </div>
-      </div>
-    `;
-  }).join("");
-}
-
-else if (site.id === "Baby_god") {
-  let picked = [];
-  while (picked.length < site.count) {
-    let choice = site.items[Math.floor(Math.random() * site.items.length)];
-    if (!picked.includes(choice)) picked.push(choice);
-  }
-
-  return picked.map((c, index) => {
-    let cardId = `baby-meaning-${index}-${Date.now()}`;
-    return `
-      <div style="display:inline-block; margin:5px; cursor:pointer; text-align:center;"
-           onclick="toggleMeaning('${cardId}')">
-        <img src="${site.folder}/${c.file}" 
-             style="width:90px; height:auto; border-radius:8px; box-shadow:0 0 5px rgba(0,0,0,0.3);">
-        <div id="${cardId}" style="display:none; margin-top:5px; font-size:0.7em;">
-          <div>${c.meaning}</div>
-        </div>
-      </div>
-    `;
-  }).join("");
-}
-  
-else if (site.id === "Baby_god") {
-  let picked = [];
-  while (picked.length < site.count) {
-    let choice = site.items[Math.floor(Math.random() * site.items.length)];
-    if (!picked.includes(choice)) picked.push(choice);
-  }
-
-  return picked.map((c, index) => {
-    let cardId = `baby-meaning-${index}-${Date.now()}`;
-    return `
-      <div style="display:inline-block; margin:5px; cursor:pointer; text-align:center;"
-           onclick="toggleMeaning('${cardId}')">
-        <img src="${site.folder}/${c.file}" 
-             style="width:90px; height:auto; border-radius:8px; box-shadow:0 0 5px rgba(0,0,0,0.3);">
-        <div id="${cardId}" style="display:none; margin-top:5px; font-size:0.7em;">
-          <div>${c.meaning}</div>
-        </div>
-      </div>
-    `;
-  }).join("");
-}
-
-
-// 6) 기본 이미지 카드 (타로/오라클/카르토망시 등)
-else {
-  let picked = [];
-  while (picked.length < site.count) {
-    let num = Math.floor(Math.random() * site.total) + (site.startFrom ?? 0);
-    let ext = site.exts[Math.floor(Math.random() * site.exts.length)];
-    let n = String(num).padStart(2, "0") + "." + ext;
-    if (!picked.includes(n)) picked.push(n);
-  }
-
-  // ✅ 3장짜리 → 3열 그리드
-  if (site.count === 3) {
-    return `<div class="three-grid">` + 
-      picked.map(f => `<img src="${site.folder}/${f}" alt="Card">`).join("") +
-    `</div>`;
-  }
-
-  // ✅ 1~2장짜리 → 중앙 정렬
-  if (site.count <= 2) {
-    return `<div class="cards few-cards">` +
-      picked.map(f => `<img src="${site.folder}/${f}" alt="Card">`).join("") +
-    `</div>`;
-  }
-
- else {
-  // 카드 개수에 따라 자동 배열
-  let gridStyle = "";
-
-  if (site.count === 4) {
-    gridStyle = `
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 8px;
-      justify-items: center;
-    `;
-  } else if (site.count % 3 === 0 && site.count !== 36) {
-    gridStyle = `
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 8px;
-      justify-items: center;
-    `;
-  } else if (site.count >= 36 && site.id === "JiNi_Kipper") {
-    gridStyle = `
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 5px;
-      justify-items: center;
-    `;
-  } else {
-    gridStyle = `
-      display: flex;
-      justify-content: center;
-      flex-wrap: wrap;
-      gap: 8px;
-    `;
-  }
-
-  const cardsHTML = picked.map(f => 
-    `<img src="${site.folder}/${f}" alt="Card"
-          style="width:100%; max-width:100px; border-radius:8px;">`
-  ).join("");
-
-  return `<div style="${gridStyle}">${cardsHTML}</div>`;
-} // ← drawCards의 else 닫기
-}
-
-
 // 확인 버튼 눌렀을 때
 function showSelected() {
   const checked = document.querySelectorAll('input[type="checkbox"]:checked');
   const results = document.getElementById("results");
   results.innerHTML = "";
 
-  // 질문 표시
   const question = document.getElementById("question").value;
   if (question) {
     results.innerHTML = `<h2>질문: ${question}</h2>`;
   }
 
-  // 선택된 덱 카드 표시
   checked.forEach(item => {
     const site = sites.find(s => s.id === item.value);
     if (site) {
       const deckId = "deck-" + site.id;
-
-      // 버튼으로 선택한 장수 읽기
       const countInput = document.getElementById(`count-${site.id}`);
       const customCount = parseInt(countInput?.value) || site.count;
       site.count = customCount;
@@ -1048,6 +657,19 @@ function showSelected() {
         </div>`;
     }
   });
+}
+
+// 특정 덱 다시 뽑기
+function redraw(deckId, siteId) {
+  const site = sites.find(s => s.id === siteId);
+  const block = document.querySelector(`#${deckId} .cards`);
+  block.innerHTML = drawCards(site);
+}
+
+// 카드 의미 토글 (한글오라클, 룬 등)
+function toggleMeaning(id) {
+  const el = document.getElementById(id);
+  el.style.display = (el.style.display === "none") ? "block" : "none";
 }
 
 // 오방색 카드 클릭 시 의미 표시
@@ -1076,20 +698,12 @@ function showObang(id, idx) {
   `;
 }
 
-// 특정 덱 다시 뽑기
-function redraw(deckId, siteId) {
-  const site = sites.find(s => s.id === siteId);
-  const block = document.querySelector(`#${deckId} .cards`);
-  block.innerHTML = drawCards(site);
-}
-
-// 카드 의미 토글 (한글오라클, 룬 등)
-function toggleMeaning(id) {
-  const el = document.getElementById(id);
-  el.style.display = (el.style.display === "none") ? "block" : "none";
-  }
-}     
+// ✅ 페이지 다 로드된 후 버튼 이벤트 연결
+window.addEventListener("DOMContentLoaded", () => {
+  document.getElementById("confirmButton").addEventListener("click", showSelected);
+});
 </script>
+
 
 
 <footer style="font-size:0.9rem; color:#555; text-align:center; margin-top:40px; line-height:1.6;">
@@ -1102,6 +716,7 @@ function toggleMeaning(id) {
   
 </body>
 </html>
+
 
 
 
