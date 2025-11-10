@@ -623,29 +623,65 @@
 // 체크박스 자동 생성
 const optionsDiv = document.getElementById("options");
 sites.forEach(site => {
-  const label = document.createElement("label");
+  const label = document.createElement("div");
   label.style.display = "flex";
-  label.style.alignItems = "center";
-  label.style.gap = "6px";
-  label.style.marginBottom = "4px";
+  label.style.flexDirection = "column";
+  label.style.alignItems = "flex-start";
+  label.style.gap = "4px";
+  label.style.fontSize = "0.85rem"; // 🔸 덱 이름 작게
+  label.style.marginBottom = "10px";
+  label.style.padding = "4px 6px";
+  label.style.border = "1px solid #eee";
+  label.style.borderRadius = "6px";
+  label.style.background = "#fafafa";
 
-  // HTML 구조: 체크박스 + 이름 + 숨겨진 입력칸
   label.innerHTML = `
-    <input type="checkbox" id="check-${site.id}" value="${site.id}" onchange="toggleCountInput('${site.id}')">
-    ${site.name}
-    <input type="number" id="count-${site.id}" value="${site.count}" min="1" max="10"
-           style="width:50px; text-align:center; border:1px solid #ccc; border-radius:4px; display:none;">
+    <label style="display:flex; align-items:center; gap:5px;">
+      <input type="checkbox" id="check-${site.id}" value="${site.id}" onchange="toggleCountButtons('${site.id}', ${site.count})">
+      <span>${site.name}</span>
+    </label>
+    <div id="count-wrap-${site.id}" style="display:none; gap:6px; flex-wrap:wrap; margin-left:24px; margin-top:4px;">
+      ${[1, 2, 3, 4, 6, 9, 36].map(n => `
+        <button type="button" class="count-btn" data-value="${n}" onclick="setCount('${site.id}', ${n})"
+          style="padding:2px 8px; font-size:0.8rem; border:1px solid #ccc; border-radius:4px; background:white;">
+          ${n}장
+        </button>`).join("")}
+    </div>
   `;
-
   optionsDiv.appendChild(label);
 });
 
-// 체크 여부에 따라 입력칸 표시/숨김
-function toggleCountInput(siteId) {
+function toggleCountButtons(siteId, defaultCount) {
   const checkbox = document.getElementById(`check-${siteId}`);
-  const countInput = document.getElementById(`count-${siteId}`);
-  countInput.style.display = checkbox.checked ? "inline-block" : "none";
+  const wrap = document.getElementById(`count-wrap-${siteId}`);
+  wrap.style.display = checkbox.checked ? "flex" : "none";
+
+  // 체크 해제 시 선택 초기화
+  if (!checkbox.checked) {
+    const buttons = wrap.querySelectorAll(".count-btn");
+    buttons.forEach(b => b.style.background = "white");
+  }
 }
+
+function setCount(siteId, value) {
+  // 선택한 버튼만 강조
+  const buttons = document.querySelectorAll(`#count-wrap-${siteId} .count-btn`);
+  buttons.forEach(b => {
+    b.style.background = (parseInt(b.dataset.value) === value) ? "#4CAF50" : "white";
+    b.style.color = (parseInt(b.dataset.value) === value) ? "white" : "black";
+  });
+
+  // hidden input으로 값 저장 (showSelected에서 읽음)
+  let input = document.getElementById(`count-${siteId}`);
+  if (!input) {
+    input = document.createElement("input");
+    input.type = "hidden";
+    input.id = `count-${siteId}`;
+    document.body.appendChild(input);
+  }
+  input.value = value;
+}
+
 
 
 
@@ -897,6 +933,18 @@ else if (site.mode === "hangul") {
 
 
 // drawCards 함수 내부에 추가
+// JiNi Kipper가 36장일 때 전용 레이아웃
+if (site.id === "JiNi_Kipper" && site.count >= 36) {
+  return `<div style="
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 5px;
+    justify-items: center;
+  ">` + 
+    Array.from({length:36}, (_,i)=>`<img src="${site.folder}/${String(i+1).padStart(2,'0')}.jpg" alt="Card">`).join("")
+  + `</div>`;
+}
+
 else if (site.id === "drink_oracle") {
   let picked = [];
   while (picked.length < site.count) {
@@ -989,12 +1037,49 @@ else {
     `</div>`;
   }
 
-  // ✅ 그 외(6장 등) → 기존 방식
-  return picked.map(f => 
-    `<img src="${site.folder}/${f}" alt="Card">`
+ else {
+  // 카드 개수에 따라 자동 배열
+  let gridStyle = "";
+
+  if (site.count === 4) {
+    gridStyle = `
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 8px;
+      justify-items: center;
+    `;
+  } else if (site.count % 3 === 0 && site.count !== 36) {
+    gridStyle = `
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      justify-items: center;
+    `;
+  } else if (site.count >= 36 && site.id === "JiNi_Kipper") {
+    gridStyle = `
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 5px;
+      justify-items: center;
+    `;
+  } else {
+    gridStyle = `
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 8px;
+    `;
+  }
+
+  const cardsHTML = picked.map(f => 
+    `<img src="${site.folder}/${f}" alt="Card"
+          style="width:100%; max-width:100px; border-radius:8px;">`
   ).join("");
-} // ← 이거 하나만! drawCards의 else 닫기
+
+  return `<div style="${gridStyle}">${cardsHTML}</div>`;
+} // ← drawCards의 else 닫기
 }
+
 
     // 확인 버튼 눌렀을 때
       function showSelected() {
@@ -1014,15 +1099,15 @@ checked.forEach(item => {
   if (site) {
     const deckId = "deck-" + site.id;
 
-    // 🔸 입력된 숫자 읽기 (기본값은 site.count)
+    // 버튼으로 선택한 장수 읽기
     const countInput = document.getElementById(`count-${site.id}`);
     const customCount = parseInt(countInput?.value) || site.count;
-    site.count = customCount; // 이 덱만 임시 반영
+    site.count = customCount;
 
     results.innerHTML += `
       <div class="deck-block" id="${deckId}">
-        <h2>${site.name} (${customCount}장)</h2>
-        <div class="cards ${customCount === 6 ? "six-tarot" : ""} ${site.id}">
+        <h2 style="font-size:1rem;">${site.name} (${customCount}장)</h2>
+        <div class="cards ${site.id}">
           ${drawCards(site)}
         </div>
         <button onclick='redraw("${deckId}", "${site.id}")'>다시 뽑기</button>
@@ -1082,6 +1167,7 @@ function showObang(id, idx) {
 
 </body>
 </html>
+
 
 
 
