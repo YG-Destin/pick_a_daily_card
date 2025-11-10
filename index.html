@@ -591,7 +591,74 @@
  ];
 
     
-// 체크박스 자동 생성
+// ✅ 카드 뽑기 (모든 덱 공통 함수)
+function drawCards(site) {
+  let picked = [];
+  while (picked.length < site.count) {
+    let num = Math.floor(Math.random() * site.total);
+    let ext = site.exts[Math.floor(Math.random() * site.exts.length)];
+    let n = String(num).padStart(2, "0") + "." + ext;
+    if (!picked.includes(n)) picked.push(n);
+  }
+
+  // 카드 개수에 따라 자동 배열
+  let gridStyle = "";
+
+  if (site.count === 1 || site.count === 2) {
+    gridStyle = `
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 8px;
+    `;
+  } else if (site.count === 3) {
+    gridStyle = `
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      justify-items: center;
+    `;
+  } else if (site.count === 4) {
+    gridStyle = `
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 8px;
+      justify-items: center;
+    `;
+  } else if (site.count % 3 === 0 && site.count !== 36) {
+    gridStyle = `
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      justify-items: center;
+    `;
+  } else if (site.id === "JiNi_Kipper" && site.count >= 36) {
+    gridStyle = `
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 5px;
+      justify-items: center;
+    `;
+  } else {
+    gridStyle = `
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 8px;
+    `;
+  }
+
+  const cardsHTML = picked
+    .map(
+      f => `<img src="${site.folder}/${f}" alt="Card" 
+              style="width:100%; max-width:100px; border-radius:8px;">`
+    )
+    .join("");
+
+  return `<div style="${gridStyle}">${cardsHTML}</div>`;
+}
+
+// ✅ 체크박스 자동 생성
 const optionsDiv = document.getElementById("options");
 sites.forEach(site => {
   const label = document.createElement("div");
@@ -601,26 +668,26 @@ sites.forEach(site => {
   label.style.marginBottom = "6px";
   label.style.fontSize = "0.9rem";
 
-  // 체크박스 + 덱 이름 + 장수 선택 select
   label.innerHTML = `
     <input type="checkbox" id="check-${site.id}" value="${site.id}" onchange="toggleCountSelect('${site.id}')">
     <span>${site.name}</span>
     <select id="count-${site.id}" style="display:none; font-size:0.9rem; padding:2px 4px; border-radius:4px;">
-      ${[1, 2, 3, 4, 6, 9, 36].map(n => `<option value="${n}">${n}장</option>`).join("")}
+      ${[1, 2, 3, 4, 6, 9, 36]
+        .map(n => `<option value="${n}">${n}장</option>`)
+        .join("")}
     </select>
   `;
-
   optionsDiv.appendChild(label);
 });
 
-// 체크하면 select 보이기 / 해제 시 숨기기
+// ✅ 체크박스 토글 → 장수 선택창 표시
 function toggleCountSelect(siteId) {
   const checkbox = document.getElementById(`check-${siteId}`);
   const select = document.getElementById(`count-${siteId}`);
   select.style.display = checkbox.checked ? "inline-block" : "none";
 }
 
-// 확인 버튼 눌렀을 때
+// ✅ 카드 뽑기 실행
 function showSelected() {
   const checked = document.querySelectorAll('input[type="checkbox"]:checked');
   const results = document.getElementById("results");
@@ -651,20 +718,20 @@ function showSelected() {
   });
 }
 
-// 특정 덱 다시 뽑기
+// ✅ 다시 뽑기 버튼
 function redraw(deckId, siteId) {
   const site = sites.find(s => s.id === siteId);
   const block = document.querySelector(`#${deckId} .cards`);
   block.innerHTML = drawCards(site);
 }
 
-// 카드 의미 토글 (한글오라클, 룬 등)
+// ✅ 카드 의미 토글
 function toggleMeaning(id) {
   const el = document.getElementById(id);
-  el.style.display = (el.style.display === "none") ? "block" : "none";
+  el.style.display = el.style.display === "none" ? "block" : "none";
 }
 
-// 오방색 카드 클릭 시 의미 표시
+// ✅ 오방색 카드용
 function showObang(id, idx) {
   const div = document.getElementById(id);
   if (div.dataset.shown === "true") return;
@@ -674,27 +741,27 @@ function showObang(id, idx) {
   const c = site.items[idx];
 
   const isPositive = Math.random() < 0.5;
-  const type = isPositive ? '<긍정>' : '<부정>';
+  const type = isPositive ? "<긍정>" : "<부정>";
   const words = isPositive ? c.keywords.positive : c.keywords.negative;
 
   let listText = "";
   for (let i = 0; i < words.length; i += 2) {
-    listText += words.slice(i, i + 2).join(' · ') + "<br>";
+    listText += words.slice(i, i + 2).join(" · ") + "<br>";
   }
 
   div.innerHTML = `
     <div style="font-size:12px; margin-bottom:3px; text-align:center;">${type}</div>
     <div style="font-size:15px; text-align:center; line-height:1.4;">
       ${listText}
-    </div>
-  `;
+    </div>`;
 }
 
-// ✅ 페이지 다 로드된 후 버튼 이벤트 연결
+// ✅ 페이지 로드 후 이벤트 연결
 window.addEventListener("DOMContentLoaded", () => {
   document.getElementById("confirmButton").addEventListener("click", showSelected);
 });
 </script>
+
 
 
 
@@ -708,6 +775,7 @@ window.addEventListener("DOMContentLoaded", () => {
   
 </body>
 </html>
+
 
 
 
