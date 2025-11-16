@@ -440,26 +440,39 @@
   }
  ];
 
-    /* --------------------------
-    🔹 2. 카드 그리기 함수
-    ---------------------------*/
-    function drawCards(site) {
-      const exts = site.exts || ["jpg"];
-      const total = site.total || 36;
-      const count = site.count || 1;
-      const picked = [];
-
-      while (picked.length < count) {
-        const num = Math.floor(Math.random() * total);
-        const ext = exts[Math.floor(Math.random() * exts.length)];
-        const n = String(num).padStart(2, "0") + "." + ext;
-        if (!picked.includes(n)) picked.push(n);
-      }
-
-      return picked
-        .map(f => `<img src="${site.folder}/${f}" alt="Card">`)
-        .join("");
+function drawCards(site) {
+  // ① 텍스트 기반 덱 (예: 카페 오라클)
+  if (site.mode === "text" && site.items) {
+    let picked = [];
+    while (picked.length < site.count) {
+      let n = Math.floor(Math.random() * site.items.length);
+      if (!picked.includes(n)) picked.push(n);
     }
+
+    return picked.map(i => {
+      const card = site.items[i];
+      return `
+        <div class="astro-card">
+          <strong>${card.name}</strong><br>
+          ${card.meaning || card.keywords || ""}
+        </div>`;
+    }).join("");
+  }
+
+  // ② 이미지 기반 덱 (기존 구조)
+  let picked = [];
+  while (picked.length < site.count) {
+    let num = Math.floor(Math.random() * site.total);
+    let ext = site.exts ? site.exts[Math.floor(Math.random() * site.exts.length)] : "jpg";
+    let n = String(num).padStart(2, "0") + "." + ext;
+    if (!picked.includes(n)) picked.push(n);
+  }
+
+  return picked.map(f => 
+    `<img src="${site.folder}/${f}" alt="Card" style="width:100px;">`
+  ).join("");
+}
+
 
     /* --------------------------
     🔹 3. 덱 다시 뽑기
@@ -539,4 +552,5 @@
   </footer>
 </body>
 </html>
+
 
