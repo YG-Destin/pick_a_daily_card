@@ -441,37 +441,71 @@
  ];
 
 function drawCards(site) {
-  // ① 텍스트 기반 덱 (예: 카페 오라클)
-  if (site.mode === "text" && site.items) {
-    let picked = [];
+  // ① items가 있을 때
+  if (site.items && Array.isArray(site.items)) {
+    const picked = [];
     while (picked.length < site.count) {
-      let n = Math.floor(Math.random() * site.items.length);
+      const n = Math.floor(Math.random() * site.items.length);
       if (!picked.includes(n)) picked.push(n);
     }
 
+    // 🟢 이미지 파일이 있는 경우
+    if (site.items[0].file) {
+      return picked.map(i => {
+        const card = site.items[i];
+        const imgPath = `${site.folder}/${card.file}`;
+        return `
+          <div style="display:inline-block; margin:8px; text-align:center;">
+            <img src="${imgPath}" alt="${card.meaning}" 
+                 style="width:100px; border:1px solid #ccc; border-radius:6px; background:#fff;"><br>
+            <div style="font-size:0.9rem; margin-top:4px;">
+              <b>${card.meaning}</b><br>
+              <span style="color:#555;">${card.advice || ""}</span>
+            </div>
+          </div>
+        `;
+      }).join("");
+    }
+
+    // 🟡 이미지 파일이 없는 경우 → 텍스트 기반 덱 (룬, 오방색, 주역 등)
     return picked.map(i => {
       const card = site.items[i];
-      return `
-        <div class="astro-card">
-          <strong>${card.name}</strong><br>
-          ${card.meaning || card.keywords || ""}
-        </div>`;
+      if (Array.isArray(card)) {
+        // 룬이나 주역처럼 배열형인 경우
+        return `
+          <div style="display:inline-block; margin:8px; padding:8px; border:1px solid #ccc; border-radius:6px; background:#f9f9f9; width:140px;">
+            <b>${card[0]}</b><br>
+            ${card[1] || ""}<br>
+            <small style="color:#555;">${card[2] || ""}</small>
+          </div>`;
+      } else if (typeof card === "object") {
+        // 오방색처럼 객체형인 경우
+        return `
+          <div style="display:inline-block; margin:8px; padding:8px; border:1px solid #ccc; border-radius:6px; background:${card.code || "#fff"}; color:${card.text || "#000"}; width:140px;">
+            <b>${card.name}</b><br>
+            <small>긍정: ${(card.keywords?.positive || []).join(", ")}</small><br>
+            <small>부정: ${(card.keywords?.negative || []).join(", ")}</small>
+          </div>`;
+      }
+      return "";
     }).join("");
   }
 
-  // ② 이미지 기반 덱 (기존 구조)
-  let picked = [];
+  // ② 이미지 랜덤형 덱
+  const picked = [];
   while (picked.length < site.count) {
-    let num = Math.floor(Math.random() * site.total);
-    let ext = site.exts ? site.exts[Math.floor(Math.random() * site.exts.length)] : "jpg";
-    let n = String(num).padStart(2, "0") + "." + ext;
+    const num = Math.floor(Math.random() * site.total);
+    const ext = site.exts ? site.exts[Math.floor(Math.random() * site.exts.length)] : "jpg";
+    const n = String(num).padStart(2, "0") + "." + ext;
     if (!picked.includes(n)) picked.push(n);
   }
 
-  return picked.map(f => 
-    `<img src="${site.folder}/${f}" alt="Card" style="width:100px;">`
+  return picked.map(f =>
+    `<img src="${site.folder}/${f}" alt="Card" 
+          style="width:100px; border:1px solid #ccc; border-radius:6px; background:#fff;">`
   ).join("");
 }
+
 
 
     /* --------------------------
@@ -552,5 +586,6 @@ function drawCards(site) {
   </footer>
 </body>
 </html>
+
 
 
