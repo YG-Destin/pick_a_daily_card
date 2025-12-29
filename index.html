@@ -30,6 +30,9 @@
     button { padding: 6px 12px; border: none; border-radius: 6px; background-color: #4CAF50; color: white; font-size: 14px; cursor: pointer; }
     button:hover { background-color: #45a049; }
     .deck-block { margin-bottom: 40px; padding: 0 10px; }
+.card-meaning {
+  display: none;
+}
   </style>
 </head>
 
@@ -661,6 +664,16 @@ return picked.map(i => {
 
       document.getElementById("confirmButton").addEventListener("click", showSelected);
     });
+document.addEventListener("click", function (e) {
+  const card = e.target.closest(".card-toggle");
+  if (!card) return;
+
+  const meaning = card.querySelector(".card-meaning");
+  if (!meaning) return;
+
+  meaning.style.display =
+    meaning.style.display === "block" ? "none" : "block";
+});
   </script>
 
   <footer style="font-size:0.9rem; color:#555; text-align:center; margin-top:40px; line-height:1.6;">
