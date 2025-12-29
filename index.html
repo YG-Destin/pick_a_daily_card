@@ -439,8 +439,74 @@
    }
   }
  ];
+
 
 function drawCards(site) {
+
+  /* 🟣 Astrology card */
+  if (site.mode === "astro") {
+    const groups = site.groups;
+    const result = [];
+
+    const house = groups.houses[Math.floor(Math.random() * groups.houses.length)];
+    const sign = groups.signs[Math.floor(Math.random() * groups.signs.length)];
+    const planet = groups.planets[Math.floor(Math.random() * groups.planets.length)];
+
+    [house, sign, planet].forEach(item => {
+      result.push(`
+        <div style="display:inline-block; margin:8px; padding:8px; border:1px solid #ccc; border-radius:6px; background:#f9f9f9; width:140px;">
+          <b>${item[0]}</b><br>
+          <small>${item[1]}</small>
+        </div>
+      `);
+    });
+
+    return result.join("");
+  }
+/* 🟣 Hangeul Oracle */
+  if (site.mode === "hangul") {
+    const res = [];
+
+    const pick = obj => {
+      const keys = Object.keys(obj);
+      const k = keys[Math.floor(Math.random() * keys.length)];
+      return [k, obj[k]];
+    };
+
+    const ini = pick(site.items.initials);
+    const vow = pick(site.items.vowels);
+    const fin = pick(site.items.finals);
+
+    [ini, vow, fin].forEach(([k, v]) => {
+      res.push(`
+        <div style="display:inline-block; margin:8px; padding:8px; border:1px solid #ccc; border-radius:6px; background:#fff; width:160px;">
+          <b>${k}</b><br>
+          <small>${v}</small>
+        </div>
+      `);
+    });
+
+    return res.join("");
+  }
+/* 🟣 YiJing */
+  if (site.mode === "iching") {
+    const picked = [];
+    while (picked.length < site.count) {
+      const n = Math.floor(Math.random() * site.items.length);
+      if (!picked.includes(n)) picked.push(n);
+    }
+
+    return picked.map(i => {
+      const g = site.items[i];
+      return `
+        <div style="display:inline-block; margin:8px; padding:8px; border:1px solid #ccc; border-radius:6px; background:#f9f9f9; width:160px;">
+          <b>${g.number}. ${g.name}</b><br>
+          <small>${g.keyword}</small><br>
+          <div style="font-size:1.1rem;">${g.symbols.join(" ")}</div>
+        </div>
+      `;
+    }).join("");
+  }
   // ① items가 있을 때
   if (site.items && Array.isArray(site.items)) {
     const picked = [];
@@ -467,28 +533,39 @@ function drawCards(site) {
       }).join("");
     }
 
-    // 🟡 이미지 파일이 없는 경우 → 텍스트 기반 덱 (룬, 오방색, 주역 등)
-    return picked.map(i => {
-      const card = site.items[i];
-      if (Array.isArray(card)) {
-        // 룬이나 주역처럼 배열형인 경우
-        return `
-          <div style="display:inline-block; margin:8px; padding:8px; border:1px solid #ccc; border-radius:6px; background:#f9f9f9; width:140px;">
-            <b>${card[0]}</b><br>
-            ${card[1] || ""}<br>
-            <small style="color:#555;">${card[2] || ""}</small>
-          </div>`;
-      } else if (typeof card === "object") {
-        // 오방색처럼 객체형인 경우
-        return `
-          <div style="display:inline-block; margin:8px; padding:8px; border:1px solid #ccc; border-radius:6px; background:${card.code || "#fff"}; color:${card.text || "#000"}; width:140px;">
-            <b>${card.name}</b><br>
-            <small>긍정: ${(card.keywords?.positive || []).join(", ")}</small><br>
-            <small>부정: ${(card.keywords?.negative || []).join(", ")}</small>
-          </div>`;
-      }
-      return "";
-    }).join("");
+    // 🟡 이미지 파일이 없는 경우 → 텍스트 기반 덱
+return picked.map(i => {
+  const card = site.items[i];
+
+  // 🔹 Lenormand
+  if (site.id === "lenormand") {
+    return `
+      <div style="display:inline-block; margin:8px; padding:8px; border:1px solid #ccc; border-radius:6px; background:#fff; width:120px; text-align:center;">
+        <div style="font-size:2rem;">${card.img}</div>
+        <b>${card.name}</b><br>
+        <small style="color:#555;">${card.meaning}</small>
+      </div>
+    `;
+  }
+
+  // 🔹 Rune 등 배열형
+  if (Array.isArray(card)) {
+    return `
+      <div style="display:inline-block; margin:8px; padding:8px; border:1px solid #ccc; border-radius:6px; background:#f9f9f9; width:140px;">
+        <b>${card[0]}</b><br>
+        ${card[1] || ""}<br>
+        <small style="color:#555;">${card[2] || ""}</small>
+      </div>`;
+  }
+
+  // 🔹 오방색 등 객체형
+  return `
+    <div style="display:inline-block; margin:8px; padding:8px; border:1px solid #ccc; border-radius:6px; background:${card.code || "#fff"}; color:${card.text || "#000"}; width:140px;">
+      <b>${card.name}</b><br>
+      <small>긍정: ${(card.keywords?.positive || []).join(", ")}</small><br>
+      <small>부정: ${(card.keywords?.negative || []).join(", ")}</small>
+    </div>`;
+}).join("");
   }
 
   // ② 이미지 랜덤형 덱
