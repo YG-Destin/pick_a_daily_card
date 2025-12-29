@@ -13,7 +13,16 @@
     }
     h1 { margin: 15px 0; font-size: 1.8rem; }
     h2 { margin-top: 20px; font-size: 1.4rem; }
-    .cards { display: flex; justify-content: center; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+    .cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  justify-items: center;
+  gap: 8px;
+  margin-top: 10px;
+}
+.cards.grid-36 {
+  grid-template-columns: repeat(9, 1fr);
+}
     .cards img { width: 100px; height: auto; border: 1px solid #ccc; border-radius: 6px; background: white; }
     .options { margin: 20px auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 10px 20px; max-width: 100%; padding: 0 10px; text-align: left; }
     .input-row { margin: 15px 0; display: flex; justify-content: center; align-items: center; gap: 10px; flex-wrap: wrap; padding: 0 10px; }
