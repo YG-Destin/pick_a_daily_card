@@ -674,6 +674,16 @@ document.addEventListener("click", function (e) {
   meaning.style.display =
     meaning.style.display === "block" ? "none" : "block";
 });
+document.addEventListener("click", function (e) {
+  const card = e.target.closest(".cards > *");
+  if (!card) return;
+
+  const meaning = card.querySelector(".card-meaning");
+  if (!meaning) return;
+
+  meaning.style.display =
+    meaning.style.display === "block" ? "none" : "block";
+});
   </script>
 
   <footer style="font-size:0.9rem; color:#555; text-align:center; margin-top:40px; line-height:1.6;">
