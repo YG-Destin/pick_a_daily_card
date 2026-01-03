@@ -1,57 +1,119 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Jini's Personal pick cards</title>
-  <style>
-    body {
-      font-family: system-ui, sans-serif;
-      text-align: center;
-      margin: 0;
-      padding: 0;
-    }
-    h1 { margin: 15px 0; font-size: 1.8rem; }
-    h2 { margin-top: 20px; font-size: 1.4rem; }
-    .cards {
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jini Personal Pick Cards</title>
+
+<style>
+body {
+  font-family: system-ui, sans-serif;
+  margin: 0;
+  padding: 0;
+  text-align: center;
+  overflow-x: hidden;
+}
+
+h1 {
+  margin: 16px 0;
+  font-size: 1.8rem;
+}
+
+h2 {
+  margin: 20px 0 10px;
+  font-size: 1.2rem;
+}
+
+.options {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px,1fr));
+  gap: 8px;
+  padding: 12px;
+  text-align: left;
+}
+
+.options label {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.cards {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
   justify-items: center;
-  gap: 8px;
-  margin-top: 10px;
+  margin: 12px auto 24px;
 }
-.cards.grid-36 {
-  grid-template-columns: repeat(9, 1fr);
+
+.card {
+  width: 100%;
+  max-width: 120px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 8px;
+  background: #fff;
+  cursor: pointer;
 }
-    .cards img { width: 100px; height: auto; border: 1px solid #ccc; border-radius: 6px; background: white; }
-    .options { margin: 20px auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 10px 20px; max-width: 100%; padding: 0 10px; text-align: left; }
-    .input-row { margin: 15px 0; display: flex; justify-content: center; align-items: center; gap: 10px; flex-wrap: wrap; padding: 0 10px; }
-    .question-input { padding: 8px; width: 100%; max-width: 280px; border: 1px solid #ccc; border-radius: 6px; }
-    button { padding: 6px 12px; border: none; border-radius: 6px; background-color: #4CAF50; color: white; font-size: 14px; cursor: pointer; }
-    button:hover { background-color: #45a049; }
-    .deck-block { margin-bottom: 40px; padding: 0 10px; }
+
+.card-front {
+  font-weight: bold;
+}
+
+.card img {
+  width: 100%;
+  border-radius: 6px;
+}
+
 .card-meaning {
   display: none;
+  font-size: 0.85rem;
+  margin-top: 6px;
+  color: #555;
 }
-  </style>
+
+.hexagram {
+  display: flex;
+  flex-direction: column;
+  font-size: 1.2rem;
+  margin-top: 4px;
+}
+
+button {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 6px;
+  background: #4CAF50;
+  color: #fff;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #43a047;
+}
+
+footer {
+  margin: 40px 0;
+  font-size: 0.8rem;
+  color: #666;
+}
+</style>
 </head>
 
 <body>
-  <h1>데일리라도 뽑아봅시다⭐</h1>
 
-  <div class="input-row">
-    <input type="text" id="question" class="question-input" placeholder="무엇을 알아볼까" />
-  </div>
+<h1>데일리라도 뽑아봅시다 ⭐</h1>
 
-  <div class="options" id="options"></div>
+<div class="options" id="options"></div>
 
-  <div style="margin: 20px 0; text-align: center;">
-    <button id="confirmButton">확인</button>
-  </div>
+<div style="margin:16px;">
+<button id="drawBtn">확인</button>
+</div>
 
-  <div id="results"></div>
+<div id="results"></div>
 
-  <script>
+<script>
     /* --------------------------
     🔹 1. 사이트 데이터 (여기만 수정)
     ---------------------------*/
@@ -457,50 +519,39 @@ function drawCards(site) {
 
   /* 🟣 Astrology card */
   if (site.mode === "astro") {
-    const groups = site.groups;
-    const result = [];
+    const g = site.groups;
+    const house = g.houses[Math.floor(Math.random() * g.houses.length)];
+    const sign = g.signs[Math.floor(Math.random() * g.signs.length)];
+    const planet = g.planets[Math.floor(Math.random() * g.planets.length)];
 
-    const house = groups.houses[Math.floor(Math.random() * groups.houses.length)];
-    const sign = groups.signs[Math.floor(Math.random() * groups.signs.length)];
-    const planet = groups.planets[Math.floor(Math.random() * groups.planets.length)];
-
-    [house, sign, planet].forEach(item => {
-      result.push(`
-        <div style="display:inline-block; margin:8px; padding:8px; border:1px solid #ccc; border-radius:6px; background:#f9f9f9; width:140px;">
-          <b>${item[0]}</b><br>
-          <small>${item[1]}</small>
-        </div>
-      `);
-    });
-
-    return result.join("");
+    return [house, sign, planet].map(item => `
+      <div class="card-toggle" style="width:120px; text-align:center;">
+        <div class="card-face"><b>${item[0]}</b></div>
+        <div class="card-meaning" style="display:none;"><small>${item[1]}</small></div>
+      </div>
+    `).join("");
   }
-/* 🟣 Hangeul Oracle */
-  if (site.mode === "hangul") {
-    const res = [];
 
+  /* 🟣 Hangeul Oracle */
+  if (site.mode === "hangul") {
     const pick = obj => {
       const keys = Object.keys(obj);
       const k = keys[Math.floor(Math.random() * keys.length)];
       return [k, obj[k]];
     };
-
     const ini = pick(site.items.initials);
     const vow = pick(site.items.vowels);
     const fin = pick(site.items.finals);
 
-    [ini, vow, fin].forEach(([k, v]) => {
-      res.push(`
-        <div style="display:inline-block; margin:8px; padding:8px; border:1px solid #ccc; border-radius:6px; background:#fff; width:160px;">
-          <b>${k}</b><br>
-          <small>${v}</small>
-        </div>
-      `);
-    });
-
-    return res.join("");
+    return [ini, vow, fin].map(([k, v]) => `
+      <div class="card-toggle" style="width:120px; text-align:center;">
+        <div class="card-face"><b>${k}</b></div>
+        <div class="card-meaning" style="display:none;"><small>${v}</small></div>
+      </div>
+    `).join("");
   }
-/* 🟣 YiJing */
+
+  /* 🟣 YiJing */
   if (site.mode === "iching") {
     const picked = [];
     while (picked.length < site.count) {
@@ -511,15 +562,20 @@ function drawCards(site) {
     return picked.map(i => {
       const g = site.items[i];
       return `
-        <div style="display:inline-block; margin:8px; padding:8px; border:1px solid #ccc; border-radius:6px; background:#f9f9f9; width:160px;">
-          <b>${g.number}. ${g.name}</b><br>
-          <small>${g.keyword}</small><br>
-          <div style="font-size:1.1rem;">${g.symbols.join(" ")}</div>
+        <div class="card-toggle" style="width:140px; text-align:center;">
+          <div class="card-face">
+            <b>${g.number}. ${g.name}</b><br>
+            <div>${g.symbols.slice().reverse().join("<br>")}</div>
+          </div>
+          <div class="card-meaning" style="display:none;">
+            <small>${g.keyword}</small>
+          </div>
         </div>
       `;
     }).join("");
   }
-  // ① items가 있을 때
+
+  /* 🟣 items 기반 덱 */
   if (site.items && Array.isArray(site.items)) {
     const picked = [];
     while (picked.length < site.count) {
@@ -527,164 +583,87 @@ function drawCards(site) {
       if (!picked.includes(n)) picked.push(n);
     }
 
-    // 🟢 이미지 파일이 있는 경우
-    if (site.items[0].file) {
-      return picked.map(i => {
-        const card = site.items[i];
-        const imgPath = `${site.folder}/${card.file}`;
+    return picked.map(i => {
+      const card = site.items[i];
+
+      // 이미지 카드
+      if (card.file) {
         return `
-          <div style="display:inline-block; margin:8px; text-align:center;">
-            <img src="${imgPath}" alt="${card.meaning}" 
-                 style="width:100px; border:1px solid #ccc; border-radius:6px; background:#fff;"><br>
-            <div style="font-size:0.9rem; margin-top:4px;">
-              <b>${card.meaning}</b><br>
-              <span style="color:#555;">${card.advice || ""}</span>
+          <div class="card-toggle" style="width:100px; text-align:center;">
+            <img src="${site.folder}/${card.file}" style="width:100%;">
+            <div class="card-meaning" style="display:none;">
+              <small>${card.meaning || ""}<br>${card.advice || ""}</small>
             </div>
           </div>
         `;
-      }).join("");
-    }
+      }
 
-    // 🟡 이미지 파일이 없는 경우 → 텍스트 기반 덱
-return picked.map(i => {
-  const card = site.items[i];
+      // Lenormand
+      if (site.id === "lenormand") {
+        return `
+          <div class="card-toggle" style="width:100px; text-align:center;">
+            <div class="card-face" style="font-size:2rem;">${card.img}</div>
+            <div class="card-meaning" style="display:none;">
+              <small>${card.name}<br>${card.meaning}</small>
+            </div>
+          </div>
+        `;
+      }
 
-  // 🔹 Lenormand
-  if (site.id === "lenormand") {
-    return `
-      <div style="display:inline-block; margin:8px; padding:8px; border:1px solid #ccc; border-radius:6px; background:#fff; width:120px; text-align:center;">
-        <div style="font-size:2rem;">${card.img}</div>
-        <b>${card.name}</b><br>
-        <small style="color:#555;">${card.meaning}</small>
-      </div>
-    `;
+      // Rune (배열형)
+      if (Array.isArray(card)) {
+        return `
+          <div class="card-toggle" style="width:120px; text-align:center;">
+            <div class="card-face"><b>${card[0]}</b></div>
+            <div class="card-meaning" style="display:none;">
+              <small>${card[1] || ""}<br>${card[2] || ""}</small>
+            </div>
+          </div>
+        `;
+      }
+
+      // 기타 객체형
+      return `
+        <div class="card-toggle" style="width:120px; text-align:center;">
+          <div class="card-face"><b>${card.name}</b></div>
+          <div class="card-meaning" style="display:none;">
+            <small>
+              ${(card.keywords?.positive || []).join(", ")}<br>
+              ${(card.keywords?.negative || []).join(", ")}
+            </small>
+          </div>
+        </div>
+      `;
+    }).join("");
   }
 
-  // 🔹 Rune 등 배열형
-  if (Array.isArray(card)) {
-    return `
-      <div style="display:inline-block; margin:8px; padding:8px; border:1px solid #ccc; border-radius:6px; background:#f9f9f9; width:140px;">
-        <b>${card[0]}</b><br>
-        ${card[1] || ""}<br>
-        <small style="color:#555;">${card[2] || ""}</small>
-      </div>`;
-  }
-
-  // 🔹 오방색 등 객체형
-  return `
-    <div style="display:inline-block; margin:8px; padding:8px; border:1px solid #ccc; border-radius:6px; background:${card.code || "#fff"}; color:${card.text || "#000"}; width:140px;">
-      <b>${card.name}</b><br>
-      <small>긍정: ${(card.keywords?.positive || []).join(", ")}</small><br>
-      <small>부정: ${(card.keywords?.negative || []).join(", ")}</small>
-    </div>`;
-}).join("");
-  }
-
-  // ② 이미지 랜덤형 덱
+  /* 🟣 이미지 랜덤형 */
   const picked = [];
   while (picked.length < site.count) {
     const num = Math.floor(Math.random() * site.total);
-    const ext = site.exts ? site.exts[Math.floor(Math.random() * site.exts.length)] : "jpg";
-    const n = String(num).padStart(2, "0") + "." + ext;
-    if (!picked.includes(n)) picked.push(n);
+    const ext = site.exts[Math.floor(Math.random() * site.exts.length)];
+    const f = String(num).padStart(2, "0") + "." + ext;
+    if (!picked.includes(f)) picked.push(f);
   }
 
-  return picked.map(f =>
-    `<img src="${site.folder}/${f}" alt="Card" 
-          style="width:100px; border:1px solid #ccc; border-radius:6px; background:#fff;">`
-  ).join("");
+  return picked.map(f => `
+    <div class="card-toggle" style="width:100px;">
+      <img src="${site.folder}/${f}" style="width:100%;">
+    </div>
+  `).join("");
 }
 
-
-
-    /* --------------------------
-    🔹 3. 덱 다시 뽑기
-    ---------------------------*/
-    function redraw(deckId, siteId) {
-      const site = sites.find(s => s.id === siteId);
-      const block = document.querySelector(`#${deckId} .cards`);
-      block.innerHTML = drawCards(site);
-    }
-
-    /* --------------------------
-    🔹 4. 선택 결과 표시
-    ---------------------------*/
-    function showSelected() {
-      const checked = document.querySelectorAll('input[type="checkbox"]:checked');
-      const results = document.getElementById("results");
-      results.innerHTML = "";
-
-      const question = document.getElementById("question").value;
-      if (question) {
-        results.innerHTML = `<h2>질문: ${question}</h2>`;
-      }
-
-      checked.forEach(item => {
-        const site = sites.find(s => s.id === item.value);
-        if (site) {
-          const deckId = "deck-" + site.id;
-          const countInput = document.getElementById(`count-${site.id}`);
-          const customCount = parseInt(countInput?.value) || site.count || 1;
-          site.count = customCount;
-
-          results.innerHTML += `
-            <div class="deck-block" id="${deckId}">
-              <h2 style="font-size:1rem;">${site.name} (${customCount}장)</h2>
-              <div class="cards ${site.id}">
-                ${drawCards(site)}
-              </div>
-              <button onclick='redraw("${deckId}", "${site.id}")'>다시 뽑기</button>
-            </div>`;
-        }
-      });
-    }
-
-    /* --------------------------
-    🔹 5. 체크박스/셀렉트 자동 생성
-    ---------------------------*/
-    function toggleCountSelect(siteId) {
-      const checkbox = document.getElementById(`check-${siteId}`);
-      const select = document.getElementById(`count-${siteId}`);
-      select.style.display = checkbox.checked ? "inline-block" : "none";
-    }
-
-    window.addEventListener("DOMContentLoaded", () => {
-      const optionsDiv = document.getElementById("options");
-      sites.forEach(site => {
-        const label = document.createElement("div");
-        label.innerHTML = `
-          <input type="checkbox" id="check-${site.id}" value="${site.id}" onchange="toggleCountSelect('${site.id}')">
-          <span>${site.name}</span>
-          <select id="count-${site.id}" style="display:none; font-size:0.9rem; padding:2px 4px; border-radius:4px;">
-            ${[1, 2, 3, 4, 6, 9, 36].map(n => `<option value="${n}">${n}장</option>`).join("")}
-          </select>
-        `;
-        optionsDiv.appendChild(label);
-      });
-
-      document.getElementById("confirmButton").addEventListener("click", showSelected);
-    });
-document.addEventListener("click", function (e) {
+/* 카드 클릭 → 뜻 토글 */
+document.addEventListener("click", e => {
   const card = e.target.closest(".card-toggle");
   if (!card) return;
-
   const meaning = card.querySelector(".card-meaning");
-  if (!meaning) return;
-
-  meaning.style.display =
-    meaning.style.display === "block" ? "none" : "block";
+  if (meaning) {
+    meaning.style.display = meaning.style.display === "block" ? "none" : "block";
+  }
 });
-document.addEventListener("click", function (e) {
-  const card = e.target.closest(".cards > *");
-  if (!card) return;
 
-  const meaning = card.querySelector(".card-meaning");
-  if (!meaning) return;
-
-  meaning.style.display =
-    meaning.style.display === "block" ? "none" : "block";
-});
-  </script>
+</script>
 
   <footer style="font-size:0.9rem; color:#555; text-align:center; margin-top:40px; line-height:1.6;">
     © 2025 Studio Y.Green. All Rights Reserved.<br>
