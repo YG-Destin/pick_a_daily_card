@@ -700,49 +700,53 @@ function drawCards(site) {
 document.addEventListener("click", e => {
   const card = e.target.closest(".card-toggle");
   if (!card) return;
+
   const meaning = card.querySelector(".card-meaning");
-  if (meaning) {
-    meaning.style.display = meaning.style.display === "block" ? "none" : "block";
-  }
+  if (!meaning) return;
+
+  meaning.style.display =
+    meaning.style.display === "block" ? "none" : "block";
 });
-/* 🔹 덱 선택 옵션 생성 */
+
+/* 🔹 덱 선택 + 카드 장수 토글 생성 */
 window.addEventListener("DOMContentLoaded", () => {
   const optionsDiv = document.getElementById("options");
 
   sites.forEach(site => {
-    const label = document.createElement("label");
-    label.style.display = "flex";
-    label.style.alignItems = "center";
-    label.style.gap = "6px";
+    const wrap = document.createElement("div");
+    wrap.style.display = "flex";
+    wrap.style.alignItems = "center";
+    wrap.style.gap = "6px";
 
-    label.innerHTML = `
-      <input type="checkbox" data-id="${site.id}">
-      <span>${site.name}</span>
+    wrap.innerHTML = `
+      <label style="flex:1;">
+        <input type="checkbox" class="deck-check" value="${site.id}">
+        ${site.name}
+      </label>
+
+      <select class="deck-count" data-id="${site.id}"
+        style="display:none; font-size:0.85rem;">
+        ${[1,2,3,4,6,9,12,36]
+          .filter(n => !site.total || n <= site.total)
+          .map(n => `<option value="${n}">${n}장</option>`)
+          .join("")}
+      </select>
     `;
 
-    optionsDiv.appendChild(label);
+    optionsDiv.appendChild(wrap);
   });
-});
 
-/* 🔹 확인 버튼 → 카드 출력 */
-document.getElementById("drawBtn").addEventListener("click", () => {
-  const results = document.getElementById("results");
-  results.innerHTML = "";
+  // 체크 시 장수 선택 토글
+  optionsDiv.addEventListener("change", e => {
+    if (!e.target.classList.contains("deck-check")) return;
 
-  const checked = document.querySelectorAll(".options input[type='checkbox']:checked");
+    const select = e.target
+      .closest("div")
+      .querySelector(".deck-count");
 
-  checked.forEach(chk => {
-    const site = sites.find(s => s.id === chk.dataset.id);
-    if (!site) return;
-
-    const block = document.createElement("div");
-    block.innerHTML = `
-      <h2>${site.name}</h2>
-      <div class="cards">
-        ${drawCards(site)}
-      </div>
-    `;
-    results.appendChild(block);
+    if (select) {
+      select.style.display = e.target.checked ? "inline-block" : "none";
+    }
   });
 });
 </script>
