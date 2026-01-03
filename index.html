@@ -43,18 +43,22 @@ h2 {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 10px;
+  justify-content: center;
   justify-items: center;
   margin: 12px auto 24px;
 }
 
-/* 카드 1장 */
+/* 1장 */
 .cards > .card-toggle:only-child {
   grid-column: 2;
 }
 
-/* 카드 2장 */
+/* 2장 – 첫 카드는 2열, 두 번째는 3열 */
 .cards > .card-toggle:nth-child(1):nth-last-child(2) {
   grid-column: 2;
+}
+.cards > .card-toggle:nth-child(2):nth-last-child(1) {
+  grid-column: 3;
 }
 
 .card {
@@ -142,6 +146,22 @@ footer {
 <body>
 
 <h1>데일리라도 뽑아봅시다 ⭐</h1>
+
+<div style="margin:12px;">
+  <input
+    type="text"
+    id="question"
+    placeholder="질문을 입력하세요"
+    style="
+      width:90%;
+      max-width:420px;
+      padding:8px 10px;
+      font-size:0.95rem;
+      border:1px solid #ccc;
+      border-radius:6px;
+    "
+  >
+</div>
 
 <div class="options" id="options"></div>
 
@@ -721,7 +741,7 @@ window.addEventListener("DOMContentLoaded", () => {
 
       <select class="deck-count" data-id="${site.id}"
         style="display:none; font-size:0.85rem;">
-        ${[1,2,3,4,6,9,12,36]
+        ${[1,2,3,4,6,9]
           .filter(n => !site.total || n <= site.total)
           .map(n => `<option value="${n}">${n}장</option>`)
           .join("")}
@@ -745,11 +765,16 @@ window.addEventListener("DOMContentLoaded", () => {
   });
 });
 </script>
+
 <script>
-/* 🔹 확인 버튼 → 카드 출력 */
 document.getElementById("drawBtn").addEventListener("click", () => {
   const results = document.getElementById("results");
   results.innerHTML = "";
+
+  const question = document.getElementById("question")?.value?.trim();
+  if (question) {
+    results.innerHTML += `<h2 style="margin-bottom:16px;">질문: ${question}</h2>`;
+  }
 
   const checkedDecks = document.querySelectorAll(".deck-check:checked");
 
@@ -757,22 +782,16 @@ document.getElementById("drawBtn").addEventListener("click", () => {
     const site = sites.find(s => s.id === chk.value);
     if (!site) return;
 
-    // 선택한 카드 장수 반영
     const select = document.querySelector(`.deck-count[data-id="${site.id}"]`);
-    if (select) {
-      site.count = parseInt(select.value, 10);
-    }
+    if (select) site.count = parseInt(select.value, 10);
 
     const block = document.createElement("div");
-    block.className = "deck-block";
-
     block.innerHTML = `
       <h2>${site.name} (${site.count}장)</h2>
       <div class="cards">
         ${drawCards(site)}
       </div>
     `;
-
     results.appendChild(block);
   });
 });
