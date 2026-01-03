@@ -745,7 +745,38 @@ window.addEventListener("DOMContentLoaded", () => {
   });
 });
 </script>
+<script>
+/* 🔹 확인 버튼 → 카드 출력 */
+document.getElementById("drawBtn").addEventListener("click", () => {
+  const results = document.getElementById("results");
+  results.innerHTML = "";
 
+  const checkedDecks = document.querySelectorAll(".deck-check:checked");
+
+  checkedDecks.forEach(chk => {
+    const site = sites.find(s => s.id === chk.value);
+    if (!site) return;
+
+    // 선택한 카드 장수 반영
+    const select = document.querySelector(`.deck-count[data-id="${site.id}"]`);
+    if (select) {
+      site.count = parseInt(select.value, 10);
+    }
+
+    const block = document.createElement("div");
+    block.className = "deck-block";
+
+    block.innerHTML = `
+      <h2>${site.name} (${site.count}장)</h2>
+      <div class="cards">
+        ${drawCards(site)}
+      </div>
+    `;
+
+    results.appendChild(block);
+  });
+});
+</script>
   <footer style="font-size:0.9rem; color:#555; text-align:center; margin-top:40px; line-height:1.6;">
     © 2025 Studio Y.Green. All Rights Reserved.<br>
     본 페이지의 HTML, CSS, JavaScript 코드 및 오라클 콘텐츠는 Studio Y.Green의 창작물로 저작권법의 보호를 받습니다.<br>
